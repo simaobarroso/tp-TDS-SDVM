@@ -9,4 +9,4 @@ Repositório do Trabalho Prático da Unidade Curricular de Tópicos de Desenvolv
 | Simão Oliveira Alvim Barroso       | pg54236 |
 | Simão Pedro Cunha Matos            | pg54239 |
 
-[Enunciado do Trabalho]()
+[Enunciado do Trabalho](https://github.com/simaobarroso/tp-TDS-SDVM/blob/main/docs/Enunciado_TP_Parte_1-5.pdf)
