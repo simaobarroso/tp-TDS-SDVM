@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/popular"
+            android:icon="@drawable/sharp_all_inbox_24"
+            android:title="Popular" />
+
+        <item
+            android:id="@+id/search"
+            android:icon="@drawable/magnifying_glass_backup_svgrepo_com"
+            android:title="Pesquisar" />
+
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/baseline_account_circle_24"
+            android:title="Perfil" />
+
+        <item
+            android:id="@+id/emergency"
+            android:icon="@drawable/call_medicine_svgrepo_com"
+            android:title="Emergência" />
+
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/historic_svgrepo_com"
+            android:title="Histórico" />
+
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/settings_svgrepo_com"
+            android:title="Definições" />
+
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/settings_svgrepo_com"
+            android:title="Terminar sessão" />
+
+    </group>
+
+</menu>
