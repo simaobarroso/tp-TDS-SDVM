@@ -26,12 +26,7 @@ abstract class GuideDatabase : RoomDatabase() {
                 scope.launch {
                     var traildao = database.trailDAO()
 
-                    traildao.deleteAll()
-
-                    var trail1 = Trail("t1", "abc")
-                    var trail2 = Trail("t2", "def")
-
-                    traildao.insert(listOf(trail1, trail2))
+                    var userdao = database.userDAO()
                 }
             }
 

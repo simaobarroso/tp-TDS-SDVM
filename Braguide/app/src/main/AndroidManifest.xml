@@ -1,24 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.braguide">
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo_red"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo_red"
         android:supportsRtl="true"
         android:theme="@style/Theme.Braguide"
         android:allowBackup="true"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="tiramisu"
+        android:dataExtractionRules="@xml/data_extraction_rules">
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:exported="true" />
+
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
-            android:exported="true"
-            android:theme="@style/Theme.Braguide.NoActionBar">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <activity android:name=".ui.NavigateActivity"
+            android:parentActivityName=".ui.MainActivity"
+            android:exported="true">
         </activity>
 
     </application>

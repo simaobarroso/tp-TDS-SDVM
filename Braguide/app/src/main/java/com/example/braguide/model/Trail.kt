@@ -15,4 +15,18 @@ data class Trail(
 
     @SerializedName("trail_img")
     @ColumnInfo(name = "trail_img")
-    val imageUrl : String)
+    val imageUrl : String,
+
+    @SerializedName("trail_name")
+    @ColumnInfo(name = "trail_name")
+    val trailName : String,
+
+    @SerializedName("trail_desc")
+    @ColumnInfo(name = "trail_desc")
+    val trailDescription : String?,
+
+    @SerializedName("trail_dur")
+    @ColumnInfo(name = "trail_dur")
+    val trailDuration : String?
+
+    )

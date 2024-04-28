@@ -1,6 +1,6 @@
 package com.example.braguide.model
 
-import androidx.lifecycle.LiveData
+
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TrailDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(cats: List<Trail>)
+    fun insert(cats: List<Trail>)
 
     @get:Query("SELECT DISTINCT * FROM trail")
     val trails: Flow<List<Trail>>
@@ -20,5 +20,5 @@ interface TrailDAO {
     fun getTrailById(id: Int): Flow<Trail>
 
     @Query("DELETE FROM trail")
-    suspend fun deleteAll()
+    fun deleteAll()
 }

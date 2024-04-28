@@ -4,18 +4,17 @@ import android.app.Application
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import com.example.braguide.model.GuideDatabase
 import com.example.braguide.model.Trail
 import com.example.braguide.model.TrailAPI
 import com.example.braguide.model.TrailDAO
-import com.squareup.picasso.BuildConfig
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,7 +28,7 @@ class TrailRepository (application: Application){
     var trailDao: TrailDAO
     var allTrails: Flow<List<Trail>>
 
-    private val backendURL = "https://c14d-193-137-92-5.ngrok-free.app"
+    private val backendURL = "https://29a644fa4087557d586fc409f92e75a1.serveo.net/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(backendURL)
@@ -77,9 +76,24 @@ class TrailRepository (application: Application){
         }
     }
 
-    @Suppress("RedundantSuspendModifier")
-    @WorkerThread
-    suspend fun insert(trail: List<Trail>) {
-        trailDao.insert(trail)
+
+
+    fun insert(trails: List<Trail>) {
+        InsertAsyncTask(trailDao).execute(trails)
     }
+
+    fun getTrailById(id : Int) : LiveData<Trail> {
+        return trailDao.getTrailById(id).asLiveData()
+    }
+
+
+    class InsertAsyncTask(private val trailDAO: TrailDAO) {
+
+        fun execute(trails: List<Trail>) {
+            CoroutineScope(Dispatchers.IO).launch {
+                trailDAO.insert(trails)
+            }
+        }
+    }
+
 }
