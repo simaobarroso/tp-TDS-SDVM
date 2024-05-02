@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/popular"
+        android:icon="@drawable/sharp_all_inbox_24"
+        android:title="Popular" />
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/magnifying_glass_backup_svgrepo_com"
+        android:title="Search" />
+
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/baseline_account_circle_24"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/emergency"
+        android:icon="@drawable/call_medicine_svgrepo_com"
+        android:title="Emergency" />
+
+
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/settings_svgrepo_com"
+        android:title="Logout" />
+
+</menu>

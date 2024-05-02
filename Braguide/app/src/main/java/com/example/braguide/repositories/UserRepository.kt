@@ -5,15 +5,24 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import com.example.braguide.model.GuideDatabase
+import com.example.braguide.model.TrailMetrics
+import com.example.braguide.model.TrailMetricsDAO
+import com.example.braguide.model.Trip
 import com.example.braguide.model.User
 import com.example.braguide.model.UserAPI
 import com.example.braguide.model.UserDAO
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.switchMap
 import kotlinx.coroutines.launch
 import okhttp3.Headers
 import retrofit2.Call
@@ -28,9 +37,10 @@ import java.util.stream.Collectors
 class UserRepository(application: Application) {
     var userDAO: UserDAO
     var user: Flow<User>
+    lateinit var trailMetricsDAO : TrailMetricsDAO
 
 
-    private val backendURL = "https://29a644fa4087557d586fc409f92e75a1.serveo.net/"
+    private val backendURL = "https://55eab05097df4d46557fa102a37d8e75.serveo.net/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(backendURL)
@@ -50,6 +60,7 @@ class UserRepository(application: Application) {
         val database : GuideDatabase = GuideDatabase.getDatabase(application, scope)
 
         userDAO = database.userDAO()
+        trailMetricsDAO = database.trailMetricsDAO()
 
         user = flow {
             val sharedPreferences = application.applicationContext.getSharedPreferences(
@@ -200,5 +211,34 @@ class UserRepository(application: Application) {
     @WorkerThread
     fun insert(user: User) {
         userDAO.insert(user)
+    }
+
+
+    fun getTrailMetricsById(id: Int): LiveData<TrailMetrics> {
+        return trailMetricsDAO.getMetricsById(id)
+    }
+
+    fun getTrailMetrics(): LiveData<List<TrailMetrics>> {
+        return user.asLiveData().switchMap { user ->
+            if (user == null) {
+                return@switchMap MutableLiveData<List<TrailMetrics>>(emptyList())
+            } else {
+                return@switchMap trailMetricsDAO.allMetrics
+            }
+        }
+    }
+
+    fun addTrailMetrics(trip: Trip) {
+        val trailMetrics = trip.finish()
+        InsertTrailMetricsAsyncTask(trailMetricsDAO).execute(trailMetrics)
+    }
+
+    class InsertTrailMetricsAsyncTask(private val trailMetricsDAO: TrailMetricsDAO) {
+
+        fun execute(trailMetrics : TrailMetrics) {
+            CoroutineScope(Dispatchers.IO).launch {
+                trailMetricsDAO.insert(trailMetrics)
+            }
+        }
     }
 }

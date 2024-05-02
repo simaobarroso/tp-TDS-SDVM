@@ -8,9 +8,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import com.example.braguide.model.EdgeTip
 import com.example.braguide.model.Trail
 import com.example.braguide.repositories.TrailRepository
-import java.io.IOException
 
 
 class TrailsViewModel(application: Application) : AndroidViewModel(application) {
@@ -24,9 +24,17 @@ class TrailsViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
-    //fun getTrailById(id: Int): LiveData<Trail> {
-     //   return repository.getTrailById(id)
-    //}
+    fun getTrailById(id: Int): LiveData<Trail> {
+        return repository.getTrailById(id)
+    }
+
+    fun getTrailsById(ids: List<Int>): LiveData<List<Trail>> {
+        return repository.getTrailsById(ids)
+    }
+
+    fun getPinsById(ids: List<Int>): LiveData<List<EdgeTip>> {
+        return repository.getPinsById(ids)
+    }
 }
 
 class TrailsViewModelFactory(private val application: Application) : ViewModelProvider.Factory {

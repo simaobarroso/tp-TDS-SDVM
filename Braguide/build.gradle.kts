@@ -2,4 +2,6 @@
 plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
+    alias(libs.plugins.maps) apply false
+    alias(libs.plugins.nav) apply false
 }

@@ -53,6 +53,7 @@ android-arch-persistence-room-compiler = { group = "android.arch.persistence.roo
 #lifecycle components
 androidx-lifecycle-extensions = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "lifecycleExtensions" }
 androidx-lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-compiler", version.ref = "lifecycle" }
+androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-arch-core = { group = "androidx.arch.core", name = "core-testing", version.ref = "coreTesting" }
 
@@ -73,3 +74,5 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+maps = {id = "com.google.gms.google-services", version = '4.4.1'}
+nav = { id = "androidx.navigation.safeargs", version = '2.7.7'}

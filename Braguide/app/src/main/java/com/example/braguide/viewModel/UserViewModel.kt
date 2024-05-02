@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import com.example.braguide.model.TrailMetrics
 import com.example.braguide.model.User
 import com.example.braguide.repositories.UserRepository
 import java.io.IOException
@@ -65,6 +66,13 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         fun onLogoutFailure()
     }
 
+    fun getMetrics(): LiveData<List<TrailMetrics>> {
+        return repository.getTrailMetrics()
+    }
+
+    fun getMetricsById(id: Int): LiveData<TrailMetrics> {
+        return repository.getTrailMetricsById(id)
+    }
 
 
     fun getDarkModePreference(context: Context): Boolean {

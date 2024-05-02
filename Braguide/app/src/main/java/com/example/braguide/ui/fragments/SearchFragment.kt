@@ -6,36 +6,31 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.braguide.R
 import com.example.braguide.model.Trail
 import com.example.braguide.model.User
-import com.example.braguide.ui.TrailsRecyclerViewAdapter
+import com.example.braguide.ui.viewadapters.TrailsRecyclerViewAdapterSearch
 import com.example.braguide.viewModel.TrailsViewModel
 import com.example.braguide.viewModel.TrailsViewModelFactory
 import com.example.braguide.viewModel.UserViewModel
 import com.example.braguide.viewModel.UserViewModelFactory
 
 
-/**
- * A fragment representing a list of Items.
- */
-class SearchFragment  // private List<Trail> trails = new ArrayList<>();
-/**
- * Mandatory empty constructor for the fragment manager to instantiate the
- * fragment (e.g. upon screen orientation changes).
- */
+class SearchFragment
     : Fragment() {
     private var mColumnCount = 1
     private lateinit var trailViewModel: TrailsViewModel
     private lateinit var searchView : SearchView
-    private lateinit var adapter: TrailsRecyclerViewAdapter
+    private lateinit var adapter: TrailsRecyclerViewAdapterSearch
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,24 +77,33 @@ class SearchFragment  // private List<Trail> trails = new ArrayList<>();
             } else {
                 recyclerView.setLayoutManager(GridLayoutManager(context, mColumnCount))
             }
-            adapter = TrailsRecyclerViewAdapter(trails)
+            adapter = TrailsRecyclerViewAdapterSearch(trails)
             recyclerView.setAdapter(adapter)
             // Set the item click listener
             // Handle the item click event
-            /*if (user.userType == "premium") {
-                adapter.setListener(this::replaceFragment)
+            if (user.userType == "Premium") {
+                adapter.setListener(object : TrailsRecyclerViewAdapterSearch.OnItemClickListener {
+                    override fun onItemClick(trail: Trail?) {
+                        trail?.let { replaceFragment(it) }
+                    }
+                })
             } else {
-                adapter.setListener { e ->
-                    Toast.makeText(
-                        getContext(),
-                        "Only premium users can use this feature",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }*/
+                adapter.setListener(object: TrailsRecyclerViewAdapterSearch.OnItemClickListener {
+                    override fun onItemClick(trail: Trail?) {
+                        Toast.makeText(
+                            getContext(),
+                            "Only premium users can use this feature",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                })
             }
-            searchView = rootView.findViewById<SearchView>(R.id.search_view)
+
+            adapter.reset()
+            searchView = rootView.findViewById(R.id.search_view)
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    Log.d("SEARCH", query)
                     if (query == "") {
                         adapter.reset()
                     } else {
@@ -119,6 +123,17 @@ class SearchFragment  // private List<Trail> trails = new ArrayList<>();
                 }
             })
         }
+    }
+
+    private fun replaceFragment(trail: Trail) {
+        val bundle = Bundle()
+        bundle.putInt("id", trail.id)
+        val navHostFragment =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
+        navHostFragment!!.navController.navigate(R.id.trailDescriptionFragment, bundle)
+    }
+
+
     companion object {
         private const val ARG_COLUMN_COUNT = "column-count"
         fun newInstance(columnCount: Int): SearchFragment {

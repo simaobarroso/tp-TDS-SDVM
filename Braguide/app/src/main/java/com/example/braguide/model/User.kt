@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 @Entity(tableName = "user", indices = [Index(value = ["username"],unique = true)])
@@ -27,4 +28,4 @@ data class User(
 
     @SerializedName("email")
     @ColumnInfo(name = "email")
-    val email: String?)
+    val email: String?) :Serializable

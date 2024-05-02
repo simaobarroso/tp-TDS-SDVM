@@ -1,7 +1,6 @@
-package com.example.braguide.ui
+package com.example.braguide.ui.viewadapters
 
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -13,16 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.braguide.R
 import com.example.braguide.model.Trail
 import com.squareup.picasso.Picasso
-import java.util.Locale
 
 
 class TrailsRecyclerViewAdapter(private val mValues: List<Trail>) :
     RecyclerView.Adapter<TrailsRecyclerViewAdapter.ViewHolder>() {
 
     private lateinit var listener : OnItemClickListener
-
-    private var filteredTrails: MutableList<Trail>? = mutableListOf()
-
 
     interface OnItemClickListener {
         fun onItemClick(trail: Trail?)
@@ -39,7 +34,7 @@ class TrailsRecyclerViewAdapter(private val mValues: List<Trail>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.mIdView.text = mValues[position].id
+        holder.mIdView.text = mValues[position].trailName
         holder.mItem = mValues[position]
         Picasso.get()
             .load(mValues[position].imageUrl.replace("http:", "https:"))
@@ -47,6 +42,8 @@ class TrailsRecyclerViewAdapter(private val mValues: List<Trail>) :
 
         val cd: CardView = holder.mView.findViewById(R.id.card_trail_main_view)
         cd.setCardBackgroundColor(Color.WHITE)
+
+        holder.mIdView.setTextColor(Color.GRAY)
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(mValues[position])
@@ -65,24 +62,5 @@ class TrailsRecyclerViewAdapter(private val mValues: List<Trail>) :
         override fun toString(): String {
             return super.toString() + mIdView
         }
-    }
-
-
-    fun filterData(query: String) {
-        filteredTrails?.clear()
-        for (data in mValues) {
-            if (data.trailName.lowercase(Locale.ROOT)
-                    .contains(query.lowercase(Locale.ROOT))
-            ) {
-                filteredTrails?.add(data)
-            }
-        }
-        notifyDataSetChanged()
-    }
-
-    fun reset() {
-        filteredTrails?.clear()
-        filteredTrails?.addAll(mValues)
-        notifyDataSetChanged()
     }
 }

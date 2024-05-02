@@ -2,9 +2,10 @@ package com.example.braguide.repositories
 
 import android.app.Application
 import android.util.Log
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asLiveData
+import com.example.braguide.model.EdgeTip
 import com.example.braguide.model.GuideDatabase
 import com.example.braguide.model.Trail
 import com.example.braguide.model.TrailAPI
@@ -28,7 +29,7 @@ class TrailRepository (application: Application){
     var trailDao: TrailDAO
     var allTrails: Flow<List<Trail>>
 
-    private val backendURL = "https://29a644fa4087557d586fc409f92e75a1.serveo.net/"
+    private val backendURL = "https://55eab05097df4d46557fa102a37d8e75.serveo.net/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(backendURL)
@@ -84,6 +85,37 @@ class TrailRepository (application: Application){
 
     fun getTrailById(id : Int) : LiveData<Trail> {
         return trailDao.getTrailById(id).asLiveData()
+    }
+
+    fun getTrailsById(ids : List<Int>) : LiveData<List<Trail>> {
+        return trailDao.getTrailsById(ids).asLiveData()
+    }
+
+    fun getPinsById(ids: List<Int>): LiveData<List<EdgeTip>> {
+        val mediatorLiveData = MediatorLiveData<List<EdgeTip>>()
+        val liveData: LiveData<List<Trail>> = trailDao.trails.asLiveData()
+        mediatorLiveData.addSource(
+            liveData
+        ) { trails: List<Trail> ->
+            val filteredPins: MutableList<EdgeTip> =
+                ArrayList()
+            var appended: Boolean
+            for (id in ids) {
+                appended = false
+                for (trail in trails) {
+                    if (!appended) {
+                        for (pin in trail.getRoute()) {
+                            if (!appended && pin.id == id) {
+                                filteredPins.add(pin)
+                                appended = true
+                            }
+                        }
+                    }
+                }
+            }
+            mediatorLiveData.postValue(filteredPins)
+        }
+        return mediatorLiveData
     }
 
 

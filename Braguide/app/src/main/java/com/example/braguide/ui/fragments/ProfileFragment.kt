@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import com.example.braguide.model.User
 import com.example.braguide.viewModel.UserViewModel
 import java.io.IOException
@@ -23,7 +25,6 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("ENTREI", "ProfileFragment")
 
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
@@ -52,6 +53,14 @@ class ProfileFragment : Fragment() {
         var emailString = user.email
         if (emailString == "") emailString = "No Email"
         email.text = emailString
+
+        val button : Button = view.findViewById(R.id.profile_trailsHist_button)
+        button.setOnClickListener { replaceFragment() }
+    }
+
+    private fun replaceFragment() {
+        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFragment.navController.navigate(R.id.trailHistoryFragment)
     }
 
 

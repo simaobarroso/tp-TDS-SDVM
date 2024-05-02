@@ -1,6 +1,7 @@
 package com.example.braguide.model
 
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -18,6 +19,9 @@ interface TrailDAO {
 
     @Query("SELECT * FROM trail WHERE id = :id")
     fun getTrailById(id: Int): Flow<Trail>
+
+    @Query("SELECT * FROM trail WHERE id IN (:ids)")
+    fun getTrailsById(ids: List<Int>): Flow<List<Trail>>
 
     @Query("DELETE FROM trail")
     fun deleteAll()

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1047252511287",
+    "project_id": "braguide-16ff3",
+    "storage_bucket": "braguide-16ff3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047252511287:android:6385c54930b459a304adb2",
+        "android_client_info": {
+          "package_name": "com.example.braguide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa5URxkR_SoeK1nh_NxkDOx6OJrWKkiog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

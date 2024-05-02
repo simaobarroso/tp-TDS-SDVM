@@ -45,6 +45,17 @@
         <action
             android:id="@+id/action_profileFragment_to_popularFragment"
             app:destination="@id/popularFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_trailHistoryFragment"
+            app:destination="@id/trailHistoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trailHistoryFragment"
+        android:name="com.example.braguide.ui.fragments.HistoryFragment"
+        android:label="trailHistoryFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/emergencyFragment"
@@ -78,6 +89,23 @@
         <action
             android:id="@+id/action_trailDescriptionFragment_to_popularFragment"
             app:destination="@id/popularFragment" />
+        <action
+            android:id="@+id/action_trailDescriptionFragment_to_pinFragment"
+            app:destination="@id/pinFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/pinFragment"
+        android:name="com.example.braguide.ui.fragments.PinFragment"
+        android:label="PinFragment" />
+    <fragment
+        android:id="@+id/trailMetricsDescriptionFragment"
+        android:name="com.example.braguide.ui.fragments.TrailMetricsDescriptionFragment"
+        android:label="TrailMetricsDescriptionFragment" >
+        <action
+            android:id="@+id/action_trailMetricsDescriptionFragment_to_pinFragment"
+            app:destination="@id/pinFragment" />
+    </fragment>
+
+
 
 </navigation>

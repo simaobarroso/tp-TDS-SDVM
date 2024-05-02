@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     kotlin("kapt")
+    alias(libs.plugins.maps)
+    alias(libs.plugins.nav)
 }
 
 android {
@@ -95,6 +97,7 @@ dependencies {
     // lifecycle components
     implementation(libs.androidx.lifecycle.extensions)
     kapt(libs.androidx.lifecycle.compiler)
+    implementation(libs.androidx.lifecycle.livedata)
     //annotationProcessor(libs.androidx.room.compiler)
     androidTestImplementation(libs.androidx.arch.core)
 
@@ -115,4 +118,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     kapt("com.android.databinding:compiler:3.0.0-beta6")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    // Import the Firebase BoM
+    //implementation("com.google.firebase:firebase-bom:32.0.0")
+    // When using the BoM, don't specify versions in Firebase dependencies
+    //implementation("com.google.firebase:firebase-analytics")
 }
