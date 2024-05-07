@@ -1,6 +1,8 @@
 package com.example.braguide.ui.viewadapters
 
 
+import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +10,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.recyclerview.widget.RecyclerView
 import com.example.braguide.R
 import com.example.braguide.model.Trail
 import com.squareup.picasso.Picasso
 import java.util.Locale
+import androidx.appcompat.app.AppCompatActivity
+
 
 
 class TrailsRecyclerViewAdapterSearch(private val mValues: List<Trail>) :
@@ -30,11 +35,19 @@ class TrailsRecyclerViewAdapterSearch(private val mValues: List<Trail>) :
         this.listener = listener!!
     }
 
+    var cont:Context? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        cont = parent.context
         val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_item, parent, false)
+            .inflate(R.layout.frag_item2, parent, false)
         return ViewHolder(view)
     }
+
+    fun isDarkModeEnabled(context: Context): Boolean {
+        val nightModeFlags = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+    }
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mIdView.text = filteredTrails[position].trailName
@@ -48,10 +61,17 @@ class TrailsRecyclerViewAdapterSearch(private val mValues: List<Trail>) :
 
         holder.mIdView.setTextColor(Color.GRAY)
 
+        if (cont?.let { isDarkModeEnabled(it) }!!){
+            cd.setCardBackgroundColor(Color.BLACK)
+            holder.mIdView.setTextColor(Color.WHITE)
+        }
+
         holder.itemView.setOnClickListener {
             listener.onItemClick(filteredTrails[position])
         }
     }
+
+
 
     override fun getItemCount(): Int {
         return filteredTrails.size
