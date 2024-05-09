@@ -35,7 +35,7 @@ class TrailsRecyclerViewAdapterSearch(private val mValues: List<Trail>) :
         this.listener = listener!!
     }
 
-    var cont:Context? = null
+    private var cont:Context? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         cont = parent.context
         val view: View = LayoutInflater.from(parent.context)

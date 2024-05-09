@@ -55,7 +55,7 @@ class TrailMetricsRecyclerViewAdapter(
         val mainActivity = holder.itemView.context as MainActivity
         if (mainActivity.isDarkModeEnabled) {
             textColor = Color.WHITE
-            cardColor = Color.GRAY
+            cardColor = Color.BLACK
         } else {
             textColor = Color.BLACK
             cardColor = Color.WHITE

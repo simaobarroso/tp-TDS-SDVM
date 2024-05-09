@@ -1,6 +1,8 @@
 package com.example.braguide.ui.viewadapters
 
 
+import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ class TrailsRecyclerViewAdapter(private val mValues: List<Trail>) :
     RecyclerView.Adapter<TrailsRecyclerViewAdapter.ViewHolder>() {
 
     private lateinit var listener : OnItemClickListener
+    private var cont:Context? = null
 
     interface OnItemClickListener {
         fun onItemClick(trail: Trail?)
@@ -28,6 +31,7 @@ class TrailsRecyclerViewAdapter(private val mValues: List<Trail>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        cont = parent.context
         val view: View = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_item, parent, false)
         return ViewHolder(view)
@@ -45,10 +49,21 @@ class TrailsRecyclerViewAdapter(private val mValues: List<Trail>) :
 
         holder.mIdView.setTextColor(Color.GRAY)
 
+        if (cont?.let { isDarkModeEnabled(it) }!!){
+            cd.setCardBackgroundColor(Color.BLACK)
+            holder.mIdView.setTextColor(Color.WHITE)
+        }
+
         holder.itemView.setOnClickListener {
             listener.onItemClick(mValues[position])
         }
     }
+
+    private fun isDarkModeEnabled(context: Context): Boolean {
+        val nightModeFlags = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+    }
+
 
     override fun getItemCount(): Int {
         return mValues.size

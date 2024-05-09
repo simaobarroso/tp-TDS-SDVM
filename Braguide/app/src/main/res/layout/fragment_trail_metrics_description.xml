@@ -74,7 +74,7 @@
 
                     <TextView
                         android:id="@+id/trail_metricsDescriptionTitle"
-                        android:layout_width="156dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Time taken on the trail:"
                         android:textStyle="bold"
@@ -82,7 +82,7 @@
 
                     <TextView
                         android:id="@+id/trail_metricsTImeTaken"
-                        android:layout_width="198dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Metrics time taken"
                         tools:ignore="HardcodedText" />
@@ -96,7 +96,7 @@
 
                     <TextView
                         android:id="@+id/trail_percentage_hardtext"
-                        android:layout_width="126dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Complete trail (%):"
                         android:textStyle="bold"

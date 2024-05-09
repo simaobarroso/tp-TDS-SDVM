@@ -84,7 +84,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/call_medicine_svgrepo_com"
+                    android:src="@drawable/baseline_language_24"
                     tools:ignore="ContentDescription" />
 
                 <TextView

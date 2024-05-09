@@ -44,7 +44,7 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/logo_red"
+                    android:src="@drawable/baseline_directions_walk_24"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -65,7 +65,7 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/logo_red"
+                    android:src="@drawable/baseline_access_time_24"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -95,7 +95,7 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/logo_red"
+                    android:src="@drawable/baseline_browse_gallery_24"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -115,7 +115,7 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/logo_red"
+                    android:src="@drawable/baseline_incomplete_circle_24"
                     tools:ignore="ContentDescription" />
 
                 <TextView
