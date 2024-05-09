@@ -62,7 +62,6 @@ class TrailMetricsRecyclerViewAdapter(
         }
         holder.trailName.setTextColor(textColor)
         holder.duration.setTextColor(textColor)
-        holder.difficulty.setTextColor(textColor)
         holder.timeUsed.setTextColor(textColor)
         holder.percentage.setTextColor(textColor)
         val cd = holder.mView.findViewById<CardView>(R.id.card_view)
@@ -81,7 +80,6 @@ class TrailMetricsRecyclerViewAdapter(
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val trailName: TextView = mView.findViewById<TextView>(R.id.trailTitle)
-        val difficulty: TextView = mView.findViewById<TextView>(R.id.trailDifficulty)
         val duration: TextView = mView.findViewById<TextView>(R.id.trailTime)
         val imageView: ImageView = mView.findViewById<ImageView>(R.id.cardimage)
         val percentage: TextView = mView.findViewById<TextView>(R.id.trail_metricsCompletePercentage)
@@ -89,7 +87,7 @@ class TrailMetricsRecyclerViewAdapter(
         var mItem: Trail? = null
 
         override fun toString(): String {
-            return super.toString() + trailName + difficulty + duration
+            return super.toString() + trailName + duration
         }
     }
 }

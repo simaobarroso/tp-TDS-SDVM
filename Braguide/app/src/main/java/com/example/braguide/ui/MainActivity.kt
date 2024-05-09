@@ -89,6 +89,26 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.settingsFragment)
                 true
             }
+            R.id.profile -> {
+                navController.navigate(R.id.profileFragment)
+                true
+            }
+            R.id.logout -> {
+                try {
+                    userViewModel.logOut(
+                        applicationContext,
+                        object : UserViewModel.LogoutCallback {
+                            override fun onLogoutSuccess() {
+                                changeToLoginActivity()
+                            }
+
+                            override fun onLogoutFailure() {}
+                        })
+                } catch (e: IOException) {
+                    throw RuntimeException(e)
+                }
+                true
+            }
 
             else -> false
         }
@@ -105,28 +125,9 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.searchFragment)
                     true
                 }
-                R.id.profile -> {
-                    navController.navigate(R.id.profileFragment)
-                    true
-                }
+
                 R.id.emergency -> {
                     navController.navigate(R.id.emergencyFragment)
-                    true
-                }
-                R.id.logout -> {
-                    try {
-                        userViewModel.logOut(
-                            applicationContext,
-                            object : UserViewModel.LogoutCallback {
-                                override fun onLogoutSuccess() {
-                                    changeToLoginActivity()
-                                }
-
-                                override fun onLogoutFailure() {}
-                            })
-                    } catch (e: IOException) {
-                        throw RuntimeException(e)
-                    }
                     true
                 }
                 else -> false

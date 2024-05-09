@@ -11,10 +11,6 @@
         android:icon="@drawable/magnifying_glass_backup_svgrepo_com"
         android:title="Search" />
 
-    <item
-        android:id="@+id/profile"
-        android:icon="@drawable/baseline_account_circle_24"
-        android:title="Profile" />
 
     <item
         android:id="@+id/emergency"
@@ -22,9 +18,5 @@
         android:title="Emergency" />
 
 
-    <item
-        android:id="@+id/logout"
-        android:icon="@drawable/settings_svgrepo_com"
-        android:title="Logout" />
 
 </menu>
