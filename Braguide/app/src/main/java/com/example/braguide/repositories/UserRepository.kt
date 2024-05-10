@@ -40,7 +40,7 @@ class UserRepository(application: Application) {
     lateinit var trailMetricsDAO : TrailMetricsDAO
 
 
-    private val backendURL = "https://4a06bd767145e7b79d0f4c364c066c0d.serveo.net"
+    private val backendURL = "https://64f-193-137-92-72.ngrok-free.app/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(backendURL)
