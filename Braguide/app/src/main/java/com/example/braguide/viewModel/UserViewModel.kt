@@ -43,6 +43,8 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     interface LoginCallback {
         fun onLoginSuccess()
+
+
         fun onLoginFailure()
     }
 
@@ -66,6 +68,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         fun onLogoutFailure()
     }
 
+    fun fact() : String {
+        return repository.fact()
+    }
     fun getMetrics(): LiveData<List<TrailMetrics>> {
         return repository.getTrailMetrics()
     }

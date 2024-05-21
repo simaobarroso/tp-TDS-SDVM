@@ -3,10 +3,10 @@ Repositório do Trabalho Prático da Unidade Curricular de Tópicos de Desenvolv
 
 ## Elementos do grupo 
 
-| Nome                               | Número  |
-|------------------------------------|---------|
+| Nome                                       | Número  |
+|--------------------------------------------|---------|
 | João Afonso Alvim Oliveira Dias de Almeida | pg53902 |
-| Simão Oliveira Alvim Barroso       | pg54236 |
-| Simão Pedro Cunha Matos            | pg54239 |
+| Simão Oliveira Alvim Barroso               | pg54236 |
+| Simão Pedro Cunha Matos                    | pg54239 |
 
 [Enunciado do Trabalho](https://github.com/simaobarroso/tp-TDS-SDVM/blob/main/docs/Enunciado_TP_Parte_1-5.pdf)
