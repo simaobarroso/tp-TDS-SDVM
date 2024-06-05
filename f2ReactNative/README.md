@@ -10,3 +10,9 @@ npx react-native start
 ```
 
 https://www.youtube.com/watch?v=W1Co2M-gsQE&t=2883s
+
+TO-DO:
+
+Na parte das variveis globais colocar cores, qual o tipo etc
+
+https://sugandsingh5566.medium.com/how-to-set-vector-icons-in-your-react-native-app-for-ios-and-android-f1a7ce7a3ca1
