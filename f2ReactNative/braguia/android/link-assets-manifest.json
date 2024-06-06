@@ -1,0 +1,21 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/logo_red.json",
+      "sha1": "b465bd5dfe3e43deefa054a1aa49beaec4b91aa0"
+    },
+    {
+      "path": "assets/logo_red.png",
+      "sha1": "48a666068ace9d9fd2f2d7aad770ceaee4f70738"
+    },
+    {
+      "path": "assets/logo_white.png",
+      "sha1": "32fa393b341d4f7afa0e13c6395fcd03936a87d5"
+    },
+    {
+      "path": "assets/selection.json",
+      "sha1": "ce51371cd35819b23e7322061492f0218f2875c2"
+    }
+  ]
+}
