@@ -1,27 +1,38 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { SafeAreaView,Switch, View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { cores, api, theme, dark, light } from '../var.js';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Settings = () => {
-  const [currentTheme, setCurrentTheme] = useState(theme);
+  const [isSwitch1Enabled, setIsSwitch1Enabled] = useState(true);
+  const [isSwitch2Enabled, setIsSwitch2Enabled] = useState(false);
 
-  const toggleTheme = () => {
-    setCurrentTheme(currentTheme === 'light' ? 'dark' : 'light');
-  };
-
-  const currentColorScheme = currentTheme === 'light' ? light : dark;
+  const toggleSwitch1 = () => setIsSwitch1Enabled(previousState => !previousState);
+  const toggleSwitch2 = () => setIsSwitch2Enabled(previousState => !previousState);
 
   return (
-    <View style={[styles.container, { backgroundColor: currentColorScheme.back }]}>
-      <Text style={[styles.text, { color: currentColorScheme.text }]}>Settings</Text>
-      <TouchableOpacity style={styles.button} onPress={toggleTheme}>
-        <Text style={[styles.buttonText, { color: currentColorScheme.text }]}>
-          Toggle Theme
-        </Text>
-      </TouchableOpacity>
-      {/* Add other components here */}
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.switchContainer}>
+        <Text>Background Services</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={isSwitch1Enabled ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch1}
+          value={isSwitch1Enabled}
+        />
+      </View>
+      <View style={styles.switchContainer}>
+        <Text>Dark Theme</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={isSwitch2Enabled ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch2}
+          value={isSwitch2Enabled}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
