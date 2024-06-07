@@ -5,8 +5,8 @@
     • cd "/home/simao/Desktop/sdvm/tds/tp-TDS-SDVM/f2ReactNative/braguia" && 
   
 ```sh
-npx react-native run-android
 npx react-native start
+npx react-native run-android
 ```
 
 https://www.youtube.com/watch?v=W1Co2M-gsQE&t=2883s
