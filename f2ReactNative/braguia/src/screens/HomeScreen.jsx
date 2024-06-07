@@ -6,6 +6,16 @@ import { updateUsername } from '../actions/user';
 import { updateAppInfo, setTrails } from '../actions/appData';
 import {cores, api} from '../var.js'
 
+/* TO-DO:
+- Meter isto a funcionar com redux
+- Melhorar design / por a funcionar dark/ligth thene
+- Colocar clicaveis os vários trails e redirecionar
+-
+Extra
+- Carregar à medida que vamos fazendo scroll !
+
+*/
+
 const HomeScreen = () => {
 
     const [title, setTitle] = useState("Title");
