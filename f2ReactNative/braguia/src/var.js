@@ -8,15 +8,15 @@ export var theme = 'light'; // vamos mudar esta variavel para dark quando o util
 
 
 export const dark = {
-    backgroud : '#D3D3D3', 
+    back : '#D3D3D3', 
     front : '#000000',
-    letters : '#FFFFFF'
+    text : '#FFFFFF'
 }
 
 export const light = {
-    backgroud : '#FFFFFF', 
+    back : '#FFFFFF', 
     front : '#A9A9A9',
-    letters : '#000000'
+    text : '#000000'
 }
 
 

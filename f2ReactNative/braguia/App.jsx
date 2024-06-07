@@ -8,6 +8,9 @@ import Search from './src/screens/Search';
 import Emergency from './src/screens/Emergency';
 import TabNavigator from './src/navigator/TabNavigator';
 import TabTop from './src/navigator/TopTabNavigator';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './src/state/store';
 
 const Stack = createStackNavigator();
 

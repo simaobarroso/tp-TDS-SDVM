@@ -7,7 +7,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 /*
 TO-DO:
 - Falta gerir a sessao e como gerir
-- Falta confirmar se o login esta  a dar em condicoes
 */
 
 const Login = () => {
