@@ -33,7 +33,7 @@ const HomeScreen = () => {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.title}>{appInfo}</Text>
+        <Text >{appInfo}</Text>
       </View>
     );
 };
