@@ -12,42 +12,52 @@ const HomeScreen = () => {
     const [appInfo, setAppInfo] = useState("Loading");
     const [appDesc, setAppDesc] = useState("Loading");
     const [trails, setTrails] = useState([]);
+
   
     const getTitle = async () => {
       try {
-        const response = await fetch(pia + 'app');
+        const response = await fetch(api + 'app');
         if (response.ok) {
           const data = await response.json();
           setTitle(data[0].app_name);
           setAppInfo(data[0].app_desc);
           setAppDesc(data[0].app_landing_page_text);
-          console.log(data[0].app_landing_page_text);
+          //console.log(data[0].app_landing_page_text);
         } else {
-          setAppInfo("Error fetching data");
+          setAppInfo("Error fetching app ifo");
         }
       } catch (error) {
-        setAppInfo("Error fetching data");
+        setAppInfo("Error fetching da!ta");
       }
     };
 
     const getTrails = async () => {
-        fetch(api + trails)
-        .then((response) => response.json())
-        .then((data) => setTrails(data))
-        .catch((error) => console.error('Error fetching trails:', error));
-
+        try{
+            const response = await fetch(api + 'trails');
+            if (response.ok) {
+                const data = await response.json();
+                //console.log(data[0]);
+                setTrails(data)
+            } 
+        }
+        catch (error) {
+            setTrails("Error fetching trails:", error);
+        }
     }
+
+    
 
   
     useEffect(() => {
       getTitle();
-      //getTrails();
+      getTrails();
     }, []);
+    // <Image source={{ uri: item.image }} style={styles.trailImage} />
 
     const renderTrail = ({ item }) => (
         <View style={styles.trailItem}>
-          <Image source={{ uri: item.image }} style={styles.trailImage} />
-          <Text style={styles.trailName}>{item.name}</Text>
+          <Image source={{ uri: item.trail_img }} style={styles.trailImage} />
+          <Text style={styles.trailName}>{item.trail_name}</Text>
         </View>
       );
 
@@ -65,7 +75,6 @@ const HomeScreen = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
       />
-
         <Text style={styles.title}>{appDesc}</Text>
       </View>
     );
@@ -103,23 +112,8 @@ const styles = StyleSheet.create({
     title: {
       fontSize: 24,
       fontWeight: 'bold',
-      marginBottom: 20,
+      marginBottom: 55,
       color : 'black'
-    },
-    input: {
-      width: '80%',
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginBottom: 20,
-      paddingHorizontal: 20,
-      color : 'black',
-      borderRadius: 5,
-    },
-    eyeIcon: {
-      position: 'absolute',
-      right: 10,
-      top:6
     },
     trailItem: {
         marginRight: 16,
@@ -133,6 +127,7 @@ const styles = StyleSheet.create({
       trailName: {
         marginTop: 8,
         fontSize: 16,
+        color : 'black',
         fontWeight: 'bold',
       }
   });
