@@ -39,17 +39,16 @@ const Emergency = () => {
     // <Image source={{ uri: item.image }} style={styles.trailImage} />
 
     const renderPhone = ({ item }) => (
-        <View>
-        <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.contact_phone}`)}>
-          <Text style={styles.phoneText}>{item.contact_phone}</Text>
-        </TouchableOpacity>
-        <View style={styles.separator} />
+        <View >
+            <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.contact_phone}`)}>
+            <Text style={styles.phoneText}>{item.contact_phone}</Text>
+            </TouchableOpacity>
       </View>
 
     );
 
     const renderEmail= ({ item }) => (
-        <View style={styles.container}>
+        <View >
         <TouchableOpacity onPress={() => Linking.openURL(`mailto:${item.contact_mail}`)}>
           <Text style={styles.phoneText}>{item.contact_mail}</Text>
         </TouchableOpacity>
@@ -141,7 +140,7 @@ const styles = StyleSheet.create({
       },
       separator: {
         height: 1,
-        backgroundColor: '#CCCCCC',  // or any color you prefer
+        backgroundColor: 'black',  // or any color you prefer
         marginVertical: 8,  // adjust the spacing as needed
       },
   });
