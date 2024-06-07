@@ -1,4 +1,4 @@
-import { View, Text, Image  } from 'react-native';
+import { View, Text,TextInput, Image  } from 'react-native';
 import { StyleSheet, FlatList} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,11 +6,21 @@ import { updateUsername } from '../actions/user';
 import { updateAppInfo, setTrails } from '../actions/appData';
 import {cores, api} from '../var.js'
 
+/* To-DO:
+- Melhorar interface
+- Fazer redirects
+- Dark Mode !
+*/
+
 const Search = () => {
     const [title, setTitle] = useState("Title");
     const [appInfo, setAppInfo] = useState("Loading");
     const [appDesc, setAppDesc] = useState("Loading");
     const [trails, setTrails] = useState([]);
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredTrails, setFilteredTrails] = useState(trails);
+
 
   
     const getTitle = async () => {
@@ -53,6 +63,22 @@ const Search = () => {
     }, []);
     // <Image source={{ uri: item.image }} style={styles.trailImage} />
 
+    useEffect(() => {
+        filterTrails(searchQuery);
+      }, [searchQuery, trails]);
+    
+      const filterTrails = (query) => {
+        if (query) {
+          const filtered = trails.filter((trail) =>
+            trail.trail_name.toLowerCase().includes(query.toLowerCase())
+          );
+          setFilteredTrails(filtered);
+        } else {
+          setFilteredTrails(trails);
+        }
+      };
+
+
     const renderTrail = ({ item }) => (
         <View style={styles.trailItem}>
           <Image source={{ uri: item.trail_img }} style={styles.trailImage} />
@@ -64,17 +90,22 @@ const Search = () => {
   
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.title}>{appInfo}</Text>
+
+    <TextInput
+        style={styles.input}
+        placeholder="Search by trail name"
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
         
         <FlatList
-        data={trails}
+        data={filteredTrails}
         renderItem={renderTrail}
         keyExtractor={(item) => item.id.toString()}
-        horizontal
+        vertical
         showsHorizontalScrollIndicator={false}
       />
-        <Text style={styles.title}>{appDesc}</Text>
       </View>
     );
 };
@@ -94,6 +125,16 @@ const styles = StyleSheet.create({
       borderBottomColor: 'white',
       marginBottom: 10,
     },
+    input: {
+        width: '80%',
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 20,
+        paddingHorizontal: 20,
+        color : 'black',
+        borderRadius: 5,
+      },
     container: {
       flex: 1,
       justifyContent: 'center',
@@ -130,5 +171,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
       }
   });
-  
+
 export default Search
