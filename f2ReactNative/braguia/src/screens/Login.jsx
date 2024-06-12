@@ -2,6 +2,10 @@ import { View, Text, TextInput, Image, StyleSheet, Button, Alert, TouchableOpaci
 import React, { useState } from 'react'
 import {cores, api} from '../var.js';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch, useSelector } from 'react-redux'; 
+import { useNavigation } from '@react-navigation/native';
+import {setCookies, updateUsername} from '../actions/user.js';
+
 
 
 /*
@@ -11,11 +15,27 @@ TO-DO:
 
 const Login = () => {
 
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
   
+  // usar isto 
+  const cookieState = useSelector(state => state.data.cookies.cookieVal); // aceder ao estado!!!!
+  const userState = useSelector(state => state.data.user.username);
+  
+
+  // actions para adicionar informacao
+
+  // reducers -> guardar / atualizar -> N\ao temos que mexer nisto
+
+  // selectors -> ir buscar
+
+  //dispatch(setCookies(cookies)); // usar isto dentro de um use effect sempre
+
+  //  use effect{
+  //} [dispatch , VARIAVEIS] // as vezes
 
   const handleLogin = async () => {
     try {
@@ -33,8 +53,31 @@ const Login = () => {
       });
 
       if (response.ok){
-        const data = await response.json();
-        Alert.alert('Login Successful + TRATAR DISTO', `Response: ${JSON.stringify(data)}`);
+          console.log(cookieState);
+          console.log("response ok");
+          const cookies = response.headers.map['set-cookie'];
+          console.log(cookies)
+          const csrfTokenMatch = cookies.match(/csrftoken=([^;]+)/);
+          const sessionIdMatch = cookies.match(/sessionid=([^;]+)/);
+          const csrfToken = csrfTokenMatch ? csrfTokenMatch[0] : null;
+          const sessionId = sessionIdMatch ? sessionIdMatch[0] : null;
+          console.log(csrfToken);
+          console.log(sessionId);
+
+          dispatch(updateUsername(username.trim())); // assim que se guarda
+          
+          if (csrfTokenMatch.length === 2) {
+            // Save cookies in Redux store
+            console.log("Saved Cookie")
+            dispatch(setCookies(csrfToken + ';' + sessionId));
+          }
+          console.log(cookieState);
+          console.log(userState);
+
+
+          // verificar no logout se o cookie state est]a vazio 
+
+        // dar navigate para o tab navigator ! navigation.navigate('Landmark', { landmark });
       }
       else {
         Alert.alert('Wrong Credentials');

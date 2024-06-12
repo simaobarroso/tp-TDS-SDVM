@@ -10,6 +10,7 @@ export const setTrails = (trails) => ({
   trails
 });
 
+// usa se isto quando se da logout !!!
 export const RESET_APP_DATA = 'RESET_APP_DATA';
 export const resetAppData = () => ({
   type: RESET_APP_DATA,
