@@ -71,12 +71,25 @@ const Trail = () => {
     const [trail, setTrail] = useState("Loading!");
 
     const getTrail = async (trail_id) => {
+      console.log("Fetching trail id=" + trail_id);
+      console.log(api + 'trails?='+ trail_id);
       try {
-        const response = await fetch(api + 'trail/' + trail_id );
+        const response = await fetch(api + 'trails?id=' + trail_id);
+        
         if (response.ok) {
           const data = await response.json();
-          setTrail(data);
-          console.log(trail);
+
+          //trail2 = data[0];
+          //console.log(trail2);
+          //console.log("NOME" ,trail2.trail_name);
+          //console.log("IMG", trail2.trail_img)
+          //console.log("dur", trail2.trail_duration)
+          
+          setTrail(data[0]);
+          //console.log("ESTOU AQUI")
+          //console.log("DATA HERE",data[0]);
+          
+          
         } else {
           setTrail("Error fetching trail id=" + trail_id);
         }
@@ -86,19 +99,17 @@ const Trail = () => {
     };
 
     useEffect(() => {
-      getTrail('1'); // NOTA O QUE TEMOS A MUDAR É AQUI E MUDAMOS O TRAIL PARA RECEBER ARGUMENTOS!
+      getTrail('1'); // NOTA O QUE TEMOS A MUDAR É AQUI E MUDAMOS O TRAIL PARA RECEBER ARGUMENTOS! 
     }, []);
-
 
     data = trail.edges;
 
-    
   return (
 
     <View style={styles.container}>
         <Text style={styles.title}>{trail.trail_name}</Text>
         <Text style={styles.title}>{trail.trail_desc}</Text>
-        <Text style={styles.title}>{trail.trail_duration} min</Text>
+        <Text style={styles.title}>{trail.trail_duration} min </Text>
         <Text style={styles.title}>Difficulty : {trail.trail_difficulty}</Text>
 
         <Image source={{ uri: trail.trail_img }} style={styles.trailImage}
