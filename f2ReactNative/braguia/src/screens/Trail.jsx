@@ -71,8 +71,8 @@ const Trail = () => {
     const [trail, setTrail] = useState("Loading!");
 
     const getTrail = async (trail_id) => {
-      console.log("Fetching trail id=" + trail_id);
-      console.log(api + 'trails?='+ trail_id);
+      //console.log("Fetching trail id=" + trail_id);
+      //console.log(api + 'trails?='+ trail_id);
       try {
         const response = await fetch(api + 'trails?id=' + trail_id);
         
