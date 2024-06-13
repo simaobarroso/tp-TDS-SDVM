@@ -1,10 +1,14 @@
 import React, {useContext} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import {resetState} from '../actions/user.js';
+
 
 
 const User = () => {
+    const dispatch = useDispatch();
+
 
     const userMetaData = useSelector((state) => state.data.user.username);
     const {
@@ -27,10 +31,9 @@ const User = () => {
           <View style={styles.content}>
             <View style={styles.profileContainer}>
               <View style={styles.backgroundContainer}>
-              <Icon size={20} color="white" name="user" />
+              <Icon size={250} color="white" name="user" />
                 <Text style={[styles.username, {color:'black'}]}>{username}</Text>
-                <Text style={[styles.infoTitle, {color:'black'}]}>User type</Text>
-                <Text style={[styles.userType, {color:'black'}]}>{user_type}</Text>
+                <Text style={[styles.infoTitle, {color:'black'}]}>User type : {user_type}</Text>
               </View>
             </View>
     
@@ -51,6 +54,11 @@ const User = () => {
             <TouchableOpacity style={styles.button} >
               <Text style={styles.buttonText}>Trails history</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.button} onPress={() => {dispatch(resetState());console.log("DEPOIS DAR REDIRECT DISTO")}}>
+              <Text style={styles.buttonText}>Logout!</Text>
+            </TouchableOpacity>
+
           </View>
         </View>
       );
