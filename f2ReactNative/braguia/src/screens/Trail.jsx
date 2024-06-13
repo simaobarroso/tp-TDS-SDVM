@@ -68,6 +68,13 @@ const MapComponent = ({ data }) => {
 
 const Trail = () => {
 
+    const dispatch = useDispatch();
+    const trail_id = '1';
+
+    //const GeoDistance = useSelector((state) => state.distance.distanceVal);
+
+    //console.log(GeoDistance);
+  
     const [trail, setTrail] = useState("Loading!");
 
     const getTrail = async (trail_id) => {
@@ -86,9 +93,17 @@ const Trail = () => {
     };
 
     useEffect(() => {
-      getTrail('1'); // NOTA O QUE TEMOS A MUDAR É AQUI E MUDAMOS O TRAIL PARA RECEBER ARGUMENTOS!
+      getTrail(trail_id); // NOTA O QUE TEMOS A MUDAR É AQUI E MUDAMOS O TRAIL PARA RECEBER ARGUMENTOS!
     }, []);
 
+    const [startTime, setStartTime] = useState(null);
+    const [isToggled, setToggle] = useState(false);
+    const [visitedTrips, setVisitedTrips] = useState([]);
+    const [notifications, setNotifications] = useState([]);
+
+    const handleButtonToggle = () => {
+      setToggle(!isToggled);
+    };
 
     data = trail.edges;
 
@@ -101,9 +116,15 @@ const Trail = () => {
         <Text style={styles.title}>{trail.trail_duration} min</Text>
         <Text style={styles.title}>Difficulty : {trail.trail_difficulty}</Text>
 
-        <Image source={{ uri: trail.trail_img }} style={styles.trailImage}
-        onError={console.log(trail.trail_img)} />
-        <Text style={styles.title}>DA ERRO DISPLAY IMAGE</Text>
+        {trail.trail_img ? (
+            <Image 
+              source={{ uri: trail.trail_img }} 
+              style={styles.trailImage}
+              onError={() => console.log('Error loading image:', trail.trail_img)} 
+            />
+          )  :(
+            <Text style={styles.title}>No image available</Text>
+          )}
 
         <MapComponent data={data} />
     </View>
@@ -140,7 +161,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain', // This ensures the image is scaled to fit the container
   },
   title: {
-    fontSize: 24,
+    fontSize: 15,
     fontWeight: 'bold',
     //marginBottom: 55,
     color : 'black'

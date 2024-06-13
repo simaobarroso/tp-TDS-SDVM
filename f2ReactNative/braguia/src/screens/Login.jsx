@@ -39,10 +39,10 @@ const Login = () => {
   //  use effect{
   //} [dispatch , VARIAVEIS] // as vezes
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     //const navigation = useNavigation();
     try {
-      const response = await fetch(api+'login', {
+      const response = fetch(api+'login', {
         credentials: 'omit',
         method: 'POST',
         headers: {
