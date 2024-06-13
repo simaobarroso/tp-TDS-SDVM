@@ -28,12 +28,12 @@ const TabNavigator = () => {
                 // tabBarBackground: () => (<BlurView overlayColor = '' bluramount={15} style={styles.BluerViewStyles}/>),
             }}>
 
-                <Tab.Screen name="Settings" component={Settings} options={{
+                <Tab.Screen name="Settings" component={Home} options={{
                     tabBarIcon: ({focused, color, size}) => (
                     <Icon size={25} color="white" name="settings" />
                     )
                 }}/>
-                <Tab.Screen name="Home" component={Home} options={{
+                <Tab.Screen name="Home" component={Login} options={{
                     tabBarIcon: ({focused, color, size}) => (
                     <Icon size={25} color="white" name="home" />
                     )

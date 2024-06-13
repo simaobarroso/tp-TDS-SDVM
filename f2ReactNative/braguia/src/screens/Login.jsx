@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import {cores, api} from '../var.js';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux'; 
-import { useNavigation } from '@react-navigation/native';
+//import { useNavigation } from '@react-navigation/native';
 import {setCookies, updateUsername} from '../actions/user.js';
 
 
@@ -68,7 +68,7 @@ const Login = () => {
           
           if (csrfTokenMatch.length === 2) {
             // Save cookies in Redux store
-            console.log("Saved Cookie")
+            console.log("Saved Cookie");
             dispatch(setCookies(csrfToken + ';' + sessionId));
           }
           console.log(cookieState);

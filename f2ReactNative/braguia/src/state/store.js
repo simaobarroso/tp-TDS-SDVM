@@ -1,22 +1,21 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-
-import reducers from './reducers';
-import { persistStore, persistReducer } from 'redux-persist';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import { createStore, combineReducers } from 'redux';
+import { persistReducer, persistStore } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import dataReducer from './reducers'; // Import your dataReducer here
 
 const persistConfig = {
-    key: 'root',
-    storage: AsyncStorage,
-    stateReconciler: autoMergeLevel2,
-}
+  key: 'root',
+  storage: AsyncStorage,
+};
 
+const rootReducer = combineReducers({
+  data: dataReducer,
+});
 
-const initialState = {};
+// Wrap the rootReducer with persistReducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const persistedReducer = persistReducer(persistConfig, reducers);
-const store = createStore(persistedReducer, initialState, applyMiddleware(thunk));
-const persistor = persistStore(store);
+// Use persistedReducer when creating the store
+export const store = createStore(persistedReducer);
 
-export { store, persistor };
+export const persistor = persistStore(store);
