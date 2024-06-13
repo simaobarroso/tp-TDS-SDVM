@@ -39,12 +39,14 @@ const User = () => {
     
             <View style={styles.detailContainer}>
               <View style={styles.detailRow}>
+                <Icon name="calendar" size={36} color="#000000" style={{color:'black'}} />
                 <Text style={[styles.detailText, {color:'black'}]}>{username}</Text>
               </View>
               <View style={styles.detailRow}>
 
               </View>
               <View style={styles.detailRow}>
+              <Icon name="calendar" size={36} color="#000000" style={{color:'black'}} />
                 <Text style={[styles.detailText, {color:'black'}]}>
                   Member since {formattedDateJoined}
                 </Text>
@@ -126,6 +128,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
       paddingVertical: 10,
       borderRadius: 10,
+      marginBottom : 10, 
       width: '50%', // Adjust the width as per your requirements
     },
     buttonText: {
