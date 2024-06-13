@@ -53,7 +53,7 @@ const TabNavigator = () => {
                         <Icon size={25} color="white" name="directions-walk" />
                         )
                 }}/>
-                <Tab.Screen name="History" component={History} options={{
+                <Tab.Screen name="User" component={User} options={{
                     tabBarIcon: ({focused, color, size}) => (
                         <Icon size={25} color="white" name="history" />
                         )

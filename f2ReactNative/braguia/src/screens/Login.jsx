@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux'; 
 //import { useNavigation } from '@react-navigation/native';
 import {setCookies, updateUsername} from '../actions/user.js';
+import { useNavigation } from '@react-navigation/native';
+import HomeScreen from './HomeScreen.jsx'
 
 
 
@@ -38,6 +40,7 @@ const Login = () => {
   //} [dispatch , VARIAVEIS] // as vezes
 
   const handleLogin = async () => {
+    //const navigation = useNavigation();
     try {
       const response = await fetch(api+'login', {
         credentials: 'omit',
@@ -73,8 +76,31 @@ const Login = () => {
           }
           console.log(cookieState);
           console.log(userState);
+          //navigation.navigate('HomeScreen', { HomeScreen });
 
-
+          fetch(api + 'user', {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Cookie': cookies
+              },
+            })
+            .then(response => {
+              if (response.ok) {
+                // Perform any additional logout actions
+                return response.json();
+              } else {
+                console.log('GetUser request failed:', response.status);
+                throw new Error('GetUser request failed');
+              }
+            })
+            .then(user => {
+              dispatch(updateUsername(user));
+            })
+            .catch(error => {
+              console.log('GetUser request failed by error:', error);
+              throw new Error('GetUser request failed');
+            });
           // verificar no logout se o cookie state est]a vazio 
 
         // dar navigate para o tab navigator ! navigation.navigate('Landmark', { landmark });
@@ -86,6 +112,7 @@ const Login = () => {
       Alert.alert('Login Failed', `Error: ${error.message}`);
     }
   };
+
 
 
   const toggleShowPassword = () => {
