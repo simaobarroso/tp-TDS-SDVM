@@ -13,62 +13,62 @@ import {cores, api} from '../var.js'
 */
 
 const Search = () => {
+  const [title, setTitle] = useState("Title");
 
-    const [title, setTitle] = useState("Title");
+  const [appInfo, setAppInfo] = useState("Loading");
 
-    const [appInfo, setAppInfo] = useState("Loading");
- 
-    const [appDesc, setAppDesc] = useState("Loading");
+  const [appDesc, setAppDesc] = useState("Loading");
 
-    const trails  = useSelector(state => state.data.appData.trails);
-    const appinfo = useSelector(state => state.data.appData.appinfo);
+  const trails  = useSelector(state => state.data.appData.trails);
+  const appinfo = useSelector(state => state.data.appData.appinfo);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredTrails, setFilteredTrails] = useState(trails);
+
+
+  const updateInfo = async () => {
+      setTitle(appinfo.app_name);
+      setAppInfo(appinfo.app_desc);
+      setAppDesc(appinfo.app_landing_page_text);
+      //console.log(data[0].app_landing_page_text);
+
+  };
+  // FIXME remover isto
+  //const getTrails = async () => {
+  //    try{
+  //        const response = await fetch(api + 'trails');
+  //        if (response.ok) {
+  //            const data = await response.json();
+  //            //console.log(data[0]);
+  //            setTrails(data)
+  //        }
+  //    }
+  //    catch (error) {
+  //        setTrails("Error fetching trails:", error);
+  //    }
+  //}
+
+
+  useEffect(() => {
+    updateInfo();
+  }, []);
+  // <Image source={{ uri: item.image }} style={styles.trailImage} />
+
+  useEffect(() => {
+      filterTrails(searchQuery);
+    }, [searchQuery, trails]);
   
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredTrails, setFilteredTrails] = useState(trails);
-
-
-    const updateInfo = async () => {
-        setTitle(appinfo[0].app_name);
-        setAppInfo(appinfo[0].app_desc);
-        setAppDesc(appinfo[0].app_landing_page_text);
-        //console.log(data[0].app_landing_page_text);
-
+    const filterTrails = (query) => {
+      if (query) {
+        const filtered = trails.filter((trail) =>
+          trail.trail_name.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredTrails(filtered);
+      } else {
+        setFilteredTrails(trails);
+      }
     };
-    // FIXME remover isto
-    //const getTrails = async () => {
-    //    try{
-    //        const response = await fetch(api + 'trails');
-    //        if (response.ok) {
-    //            const data = await response.json();
-    //            //console.log(data[0]);
-    //            setTrails(data)
-    //        }
-    //    }
-    //    catch (error) {
-    //        setTrails("Error fetching trails:", error);
-    //    }
-    //}
 
-  
-    useEffect(() => {
-      updateInfo();
-    }, []);
-    // <Image source={{ uri: item.image }} style={styles.trailImage} />
-
-    useEffect(() => {
-        filterTrails(searchQuery);
-      }, [searchQuery, trails]);
-    
-      const filterTrails = (query) => {
-        if (query) {
-          const filtered = trails.filter((trail) =>
-            trail.trail_name.toLowerCase().includes(query.toLowerCase())
-          );
-          setFilteredTrails(filtered);
-        } else {
-          setFilteredTrails(trails);
-        }
-      };
 
 
     const renderTrail = ({ item }) => (
@@ -89,14 +89,12 @@ const Search = () => {
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
+
         
         <FlatList
         data={filteredTrails}
         renderItem={renderTrail}
-        keyExtractor={(item) => {
-          //console.log(item); 
-          return item.id.toString();
-        }}
+        keyExtractor={(item) => item.id.toString()}
         vertical
         showsHorizontalScrollIndicator={false}
       />
