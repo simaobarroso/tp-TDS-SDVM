@@ -16,10 +16,6 @@ const Emergency = () => {
 
     const contacts = useSelector(state => state.data.appData.appinfo.contacts);
 
-
-    console.log("ola!!!");
-    console.log(contacts);
-
     // <Image source={{ uri: item.image }} style={styles.trailImage} />
 
     const renderPhone = ({ item }) => (

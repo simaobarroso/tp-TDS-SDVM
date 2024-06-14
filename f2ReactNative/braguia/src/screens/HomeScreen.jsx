@@ -28,8 +28,7 @@ const HomeScreen = () => {
 
   
     const updateInfo = async () => {
-        // GUARDO LOCALMENTE?
-         
+
         setTitle(appinfo.app_name);
         setAppInfo(appinfo.app_desc);
         setAppDesc(appinfo.app_landing_page_text);
