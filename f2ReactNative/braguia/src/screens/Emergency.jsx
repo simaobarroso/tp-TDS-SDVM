@@ -15,26 +15,30 @@ import {cores, api} from '../var.js'
 const Emergency = () => {
     const [contacts, setContact] = useState("Loading");
 
+    const appinfo = useSelector(state => state.data.appData.appinfo);
 
-    const getContact = async () => {
-      try {
-        const response = await fetch(api + 'app');
-        if (response.ok) {
-          const data = await response.json();
-          setContact(data[0].contacts);
-          //console.log(data[0].contacts);
-
-        } else {
-            setContact("Error fetching contacts");
-        }
-      } catch (error) {
-        setContact("Error fetching data");
-      }
+    const updateContact = async () => {
+      setContact(appinfo.contacts);
     };
+    //const getContact = async () => {
+    //  try {
+    //    const response = await fetch(api + 'app');
+    //    if (response.ok) {
+    //      const data = await response.json();
+    //      setContact(data[0].contacts);
+    //      //console.log(data[0].contacts);
+//
+    //    } else {
+    //        setContact("Error fetching contacts");
+    //    }
+    //  } catch (error) {
+    //    setContact("Error fetching data");
+    //  }
+    //};
 
 
     useEffect(() => {
-        getContact();
+        updateContact();
     }, []);
     // <Image source={{ uri: item.image }} style={styles.trailImage} />
 

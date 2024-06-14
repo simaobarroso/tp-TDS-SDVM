@@ -21,46 +21,24 @@ const HomeScreen = () => {
     const [title, setTitle] = useState("Title");
     const [appInfo, setAppInfo] = useState("Loading");
     const [appDesc, setAppDesc] = useState("Loading");
-    const [trails, setTrails] = useState([]);
+    //const [trails, setTrails] = useState([]);
 
+    const trails  = useSelector(state => state.data.appData.trails);
+    const appinfo = useSelector(state => state.data.appData.appinfo);
   
-    const getTitle = async () => {
-      try {
-        const response = await fetch(api + 'app');
-        if (response.ok) {
-          const data = await response.json();
-          setTitle(data[0].app_name);
-          setAppInfo(data[0].app_desc);
-          setAppDesc(data[0].app_landing_page_text);
-          //console.log(data[0].app_landing_page_text);
-        } else {
-          setAppInfo("Error fetching app ifo");
-        }
-      } catch (error) {
-        setAppInfo("Error fetching da!ta");
-      }
+    const updateInfo = async () => {
+        // GUARDO LOCALMENTE?
+         
+        setTitle(appinfo[0].app_name);
+        setAppInfo(appinfo[0].app_desc);
+        setAppDesc(appinfo[0].app_landing_page_text);
+        //console.log(data[0].app_landing_page_text);
+
     };
-
-    const getTrails = async () => {
-        try{
-            const response = await fetch(api + 'trails');
-            if (response.ok) {
-                const data = await response.json();
-                //console.log(data[0]);
-                setTrails(data)
-            } 
-        }
-        catch (error) {
-            setTrails("Error fetching trails:", error);
-        }
-    }
-
     
 
-  
     useEffect(() => {
-      getTitle();
-      getTrails();
+      updateInfo();
     }, []);
     // <Image source={{ uri: item.image }} style={styles.trailImage} />
 

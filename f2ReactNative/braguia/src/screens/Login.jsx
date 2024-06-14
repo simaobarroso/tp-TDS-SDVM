@@ -1,5 +1,5 @@
 import { View, Text, TextInput, Image, StyleSheet, Button, Alert, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {cores, api} from '../var.js';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux'; 
@@ -76,31 +76,29 @@ const Login = () => {
           }
       }
       catch (error) {
-          dispatch(setTrails("Error fetching trails:", error));
+          dispatch(setTrails("Error fetchin g trails:", error));
       }
   }
 
+  //const getContact = async () => {
+  //  try {
+  //    const response = await fetch(api + 'app');
+  //    if (response.ok) {
+  //      const data = await response.json();
+  //      setContact(data[0].contacts);
+  //      //console.log(data[0].contacts);
+//
+  //    } else {
+  //        setContact("Error fetching contacts");
+  //    }
+  //  } catch (error) {
+  //    setContact("Error fetching data");
+  //  }
+  //};
 
-  const getContact = async () => {
-    try {
-      const response = await fetch(api + 'app');
-      if (response.ok) {
-        const data = await response.json();
-        setContact(data[0].contacts);
-        //console.log(data[0].contacts);
-
-      } else {
-          setContact("Error fetching contacts");
-      }
-    } catch (error) {
-      setContact("Error fetching data");
-    }
-  };
 
 
-  
   useEffect(() => {
-    // FIXME 
     getTitle();
     getTrails();
   }, []);
