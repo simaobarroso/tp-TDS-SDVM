@@ -4,6 +4,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUsername } from '../actions/user';
 import { updateAppInfo, setTrails } from '../actions/appData';
+import { useNavigation } from '@react-navigation/native';
 import {cores, api, api2} from '../var.js'
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -74,6 +75,8 @@ const Trail = ({ route }) => {
 
     const trails  = useSelector(state => state.data.appData.trails);
 
+    const navigation = useNavigation();
+
     console.log(trail_id)
 
     const getTrail = async (trail_id) => {
@@ -118,8 +121,8 @@ const Trail = ({ route }) => {
         }));
       
       const waypoints = coordinates.map(coord => coord.start).join('|');
-      //console.log(waypoints)
-      //console.log(coordinates)
+      console.log(waypoints)
+      console.log(coordinates)
       const destination = coordinates[coordinates.length - 1].end;
       const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&waypoints=${waypoints}`;
     
@@ -153,8 +156,11 @@ const Trail = ({ route }) => {
           <MapComponent data={data} style={styles.map} />
         </View>
 
-        <View style={styles.containerCenter}>
-          <TouchableOpacity style={styles.button} onPress={openGoogleMaps}>
+        <View style={styles.containerButtons}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Edges', { trail_id: trail_id })}>
+            <Text style={styles.buttonText}>See pins</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => openGoogleMaps()}>
             <Text style={styles.buttonText}>Start Trail</Text>
           </TouchableOpacity>
         </View>
@@ -170,9 +176,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginTop: 10,
+    margin:10,
     borderRadius: 30,
     elevation: 1, // Add shadow on Android
-    width: '50%',
+    width: '45%',
     marginBottom: 85
   },
   buttonText: {
@@ -190,6 +197,11 @@ const styles = StyleSheet.create({
   containerCenter: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  containerButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   containerImageMap: {
     flexDirection: 'row',
