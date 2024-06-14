@@ -61,7 +61,7 @@ const Login = () => {
         //setAppInfo("Error fetching app ifo");
       }
     } catch (error) {
-      console.log("Error fetching data!");
+      console.log("Error fetching data!!!");
       dispatch(updateAppInfo("Error fetching app ifo"));
       //setAppInfo("Error fetching data!");
     }
@@ -95,18 +95,41 @@ const Login = () => {
   //    setContact("Error fetching data");
   //  }
   //};
-
+  const getUserFunc = () => {
+    fetch(api + 'user', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': cookieState
+      },
+    })
+    .then(response => {
+      if (response.ok) {
+        // Perform any additional logout actions
+        return response.json();
+      } else {
+        console.log('GetUser request failed:', response.status);
+        throw new Error('GetUser request failed');
+      }
+    })
+    .then(user => {
+      dispatch(updateUsername(user));
+    })
+    .catch(error => {
+      console.log('GetUser request failed by error:', error);
+      throw new Error('GetUser request failed');
+    });
+  };
 
 
   useEffect(() => {
-    getTitle();
-    getTrails();
+    //getTitle();
+    //getTrails();
   }, []);
 
-  const handleLogin = () => {
-    //const navigation = useNavigation();
+  const handleLogin = async () => {
     try {
-      const response = fetch(api+'login', {
+      const response = await fetch(api + 'login', {
         credentials: 'omit',
         method: 'POST',
         headers: {
@@ -115,63 +138,44 @@ const Login = () => {
         body: JSON.stringify({
           username: username.trim(),
           email: "",
-          password: password,    
+          password: password,
         }),
       });
-
-      if (response.ok){
-          console.log(cookieState);
-          console.log("response ok");
-          const cookies = response.headers.map['set-cookie'];
-          console.log(cookies)
-          const csrfTokenMatch = cookies.match(/csrftoken=([^;]+)/);
-          const sessionIdMatch = cookies.match(/sessionid=([^;]+)/);
-          const csrfToken = csrfTokenMatch ? csrfTokenMatch[0] : null;
-          const sessionId = sessionIdMatch ? sessionIdMatch[0] : null;
-          console.log(csrfToken);
-          console.log(sessionId);
-
-          dispatch(updateUsername(username.trim())); // assim que se guarda
-          
-          if (csrfTokenMatch.length === 2) {
-            // Save cookies in Redux store
-            console.log("Saved Cookie");
-            dispatch(setCookies(csrfToken + ';' + sessionId));
-          }
-          console.log(cookieState);
-          console.log(userState);
-          //navigation.navigate('HomeScreen', { HomeScreen });
-
-          fetch(api + 'user', {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Cookie': cookies
-              },
-            })
-            .then(response => {
-              if (response.ok) {
-                // Perform any additional logout actions
-                return response.json();
-              } else {
-                console.log('GetUser request failed:', response.status);
-                throw new Error('GetUser request failed');
-              }
-            })
-            .then(user => {
-              dispatch(updateUsername(user));
-            })
-            .catch(error => {
-              console.log('GetUser request failed by error:', error);
-              throw new Error('GetUser request failed');
-            });
-          // verificar no logout se o cookie state est]a vazio 
-
-        // dar navigate para o tab navigator ! navigation.navigate('Landmark', { landmark });
-      }
-      else {
+  
+      if (!response.ok) {
         Alert.alert('Wrong Credentials');
+        return;
       }
+  
+      console.log(cookieState);
+      console.log("response ok");
+      const cookies = response.headers.map['set-cookie'];
+      console.log('-> ' +cookies)
+      const csrfTokenMatch = cookies.match(/csrftoken=([^;]+)/);
+      const sessionIdMatch = cookies.match(/sessionid=([^;]+)/);
+      const csrfToken = csrfTokenMatch ? csrfTokenMatch[0] : null;
+      const sessionId = sessionIdMatch ? sessionIdMatch[0] : null;
+      console.log(csrfToken);
+      console.log(sessionId);
+
+      dispatch(updateUsername(username.trim())); // assim que se guarda
+  
+      if (csrfTokenMatch.length === 2) {
+        // Save cookies in Redux store
+        console.log("Saved Cookie");
+        dispatch(setCookies(csrfToken + ';' + sessionId));
+      }
+
+      console.log('cookies1 : ' + cookieState);
+      console.log('username1 : ' +userState);
+  
+      getUserFunc();
+
+      console.log('cookies222 : ' + cookieState);
+      console.log('username222 : ' +userState);
+  
+      // Uncomment and adjust the navigation logic as needed
+      // navigation.navigate('HomeScreen', { HomeScreen });
     } catch (error) {
       Alert.alert('Login Failed', `Error: ${error.message}`);
     }

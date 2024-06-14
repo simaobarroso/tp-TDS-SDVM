@@ -1,5 +1,5 @@
 export const mapsKey = '';
-export const api = 'https://e70c-193-137-92-72.ngrok-free.app';
+export const api = 'https://e70c-193-137-92-72.ngrok-free.app/';
 export const api2 = 'https://cf23800a810ac68e5db972de4a00ecfd.serveo.net/';
 
 // meter variaveis globais com as cores, tamanhos, etc
