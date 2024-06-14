@@ -13,53 +13,45 @@ import {cores, api} from '../var.js'
 */
 
 const Search = () => {
-    const [title, setTitle] = useState("Title");
-    const [appInfo, setAppInfo] = useState("Loading");
-    const [appDesc, setAppDesc] = useState("Loading");
-    const [trails, setTrails] = useState([]);
 
+    const [title, setTitle] = useState("Title");
+
+    const [appInfo, setAppInfo] = useState("Loading");
+ 
+    const [appDesc, setAppDesc] = useState("Loading");
+
+    const trails  = useSelector(state => state.data.appData.trails);
+    const appinfo = useSelector(state => state.data.appData.appinfo);
+  
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredTrails, setFilteredTrails] = useState(trails);
 
 
-  
-    const getTitle = async () => {
-      try {
-        const response = await fetch(api + 'app');
-        if (response.ok) {
-          const data = await response.json();
-          setTitle(data[0].app_name);
-          setAppInfo(data[0].app_desc);
-          setAppDesc(data[0].app_landing_page_text);
-          //console.log(data[0].app_landing_page_text);
-        } else {
-          setAppInfo("Error fetching app ifo");
-        }
-      } catch (error) {
-        setAppInfo("Error fetching da!ta");
-      }
+    const updateInfo = async () => {
+        setTitle(appinfo[0].app_name);
+        setAppInfo(appinfo[0].app_desc);
+        setAppDesc(appinfo[0].app_landing_page_text);
+        //console.log(data[0].app_landing_page_text);
+
     };
-
-    const getTrails = async () => {
-        try{
-            const response = await fetch(api + 'trails');
-            if (response.ok) {
-                const data = await response.json();
-                //console.log(data[0]);
-                setTrails(data)
-            } 
-        }
-        catch (error) {
-            setTrails("Error fetching trails:", error);
-        }
-    }
-
-    
+    // FIXME remover isto
+    //const getTrails = async () => {
+    //    try{
+    //        const response = await fetch(api + 'trails');
+    //        if (response.ok) {
+    //            const data = await response.json();
+    //            //console.log(data[0]);
+    //            setTrails(data)
+    //        }
+    //    }
+    //    catch (error) {
+    //        setTrails("Error fetching trails:", error);
+    //    }
+    //}
 
   
     useEffect(() => {
-      getTitle();
-      getTrails();
+      updateInfo();
     }, []);
     // <Image source={{ uri: item.image }} style={styles.trailImage} />
 
@@ -97,12 +89,14 @@ const Search = () => {
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
-
         
         <FlatList
         data={filteredTrails}
         renderItem={renderTrail}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => {
+          //console.log(item); 
+          return item.id.toString();
+        }}
         vertical
         showsHorizontalScrollIndicator={false}
       />

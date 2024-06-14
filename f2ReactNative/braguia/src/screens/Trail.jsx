@@ -77,23 +77,28 @@ const Trail = () => {
   
     const [trail, setTrail] = useState("Loading!");
 
+    const trails  = useSelector(state => state.data.appData.trails);
+
     const getTrail = async (trail_id) => {
-      try {
-        const response = await fetch(api + 'trail/' + trail_id );
-        if (response.ok) {
-          const data = await response.json();
-          setTrail(data);
-          console.log(trail);
-        } else {
-          setTrail("Error fetching trail id=" + trail_id);
-        }
-      } catch (error) {
-        setAppInfo("Error! Api Down?");
-      }
+      //try {
+      //const response = await fetch(api + 'trail/' + trail_id );
+      //  if (response.ok) {
+      //    const data = await response.json();
+      //    setTrail(data);
+      //    console.log(trail);
+      //  } else {
+      //    setTrail("Error fetching trail id=" + trail_id);
+      //  }
+      //} catch (error) {
+      //  setAppInfo("Error! Api Down?");
+      //}
+      
+      const kkk = trails.filter(t => t.id === trail_id);
+      setTrail(kkk);
     };
 
     useEffect(() => {
-      getTrail(trail_id); // NOTA O QUE TEMOS A MUDAR É AQUI E MUDAMOS O TRAIL PARA RECEBER ARGUMENTOS!
+      getTrail(trail_id); 
     }, []);
 
     const [startTime, setStartTime] = useState(null);

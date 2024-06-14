@@ -8,8 +8,6 @@ import {setCookies, updateUsername} from '../actions/user.js';
 import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen.jsx'
 
-
-
 /*
 TO-DO:
 - Falta gerir a sessao e como gerir
@@ -22,12 +20,18 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  
+
+  // carregado no getTitle()
+  //const [title, setTitle] = useState("Title");
+  //const [appInfo, setAppInfo] = useState("Loading");
+  //const [appDesc, setAppDesc] = useState("Loading");
+  // carregado no getTrails()
+  //const [trails, setTrails] = useState([]);
+
   // usar isto 
   const cookieState = useSelector(state => state.data.cookies.cookieVal); // aceder ao estado!!!!
-  const userState = useSelector(state => state.data.user.username);
+  const userState   = useSelector(state => state.data.user.username);
   
-
   // actions para adicionar informacao
 
   // reducers -> guardar / atualizar -> N\ao temos que mexer nisto
@@ -38,6 +42,68 @@ const Login = () => {
 
   //  use effect{
   //} [dispatch , VARIAVEIS] // as vezes
+
+
+  const getTitle = async () => {
+    try {
+      const response = await fetch(api + 'app');
+      if (response.ok) {
+        const data = await response.json();
+        //setTitle(data[0].app_name);
+        //setAppInfo(data[0].app_desc);
+        //setAppDesc(data[0].app_landing_page_text);
+        //console.log(data[0].app_landing_page_text);
+        dispatch(updateAppInfo(data));
+      } else {
+        // FIXME coloco dispatch com erros?
+        console.log("Error fetching app ifo");
+        dispatch(updateAppInfo("Error fetching app ifo"));
+        //setAppInfo("Error fetching app ifo");
+      }
+    } catch (error) {
+      console.log("Error fetching data!");
+      dispatch(updateAppInfo("Error fetching app ifo"));
+      //setAppInfo("Error fetching data!");
+    }
+  };
+
+  const getTrails = async () => {
+      try{
+          const response = await fetch(api + 'trails');
+          if (response.ok) {
+              const data = await response.json();
+              dispatch(setTrails(data));
+          }
+      }
+      catch (error) {
+          dispatch(setTrails("Error fetching trails:", error));
+      }
+  }
+
+
+  const getContact = async () => {
+    try {
+      const response = await fetch(api + 'app');
+      if (response.ok) {
+        const data = await response.json();
+        setContact(data[0].contacts);
+        //console.log(data[0].contacts);
+
+      } else {
+          setContact("Error fetching contacts");
+      }
+    } catch (error) {
+      setContact("Error fetching data");
+    }
+  };
+
+
+  
+  useEffect(() => {
+    // FIXME 
+    getTitle();
+    getTrails();
+  }, []);
 
   const handleLogin = () => {
     //const navigation = useNavigation();
