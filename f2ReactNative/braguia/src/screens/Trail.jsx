@@ -1,12 +1,12 @@
-import { View, Text, Image  } from 'react-native';
-import { StyleSheet, FlatList} from 'react-native';
+import { View, Text, Image, TouchableOpacity  } from 'react-native';
+import { StyleSheet, FlatList , ScrollView, Linking} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUsername } from '../actions/user';
 import { updateAppInfo, setTrails } from '../actions/appData';
-import {cores, api} from '../var.js'
+import {cores, api, api2} from '../var.js'
 import MapView, { Marker, Polyline } from 'react-native-maps';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 /* !!!
 NOTA: ALVIM MUda me isto sff
 Neste momento so estou a fazer o pedido de um trail especifico. Ora esta pagina vai servir para todos os trails. É uma abstração.
@@ -66,40 +66,26 @@ const MapComponent = ({ data }) => {
 };
 
 
-const Trail = () => {
+const Trail = ({ route }) => {
+  const { trail_id } = route.params;
 
-    const dispatch = useDispatch();
-    const trail_id = '1';
-
-    //const GeoDistance = useSelector((state) => state.distance.distanceVal);
-
-    //console.log(GeoDistance);
   
     const [trail, setTrail] = useState("Loading!");
 
     const trails  = useSelector(state => state.data.appData.trails);
 
+    console.log(trail_id)
+
     const getTrail = async (trail_id) => {
-      //try {
-      //const response = await fetch(api + 'trail/' + trail_id );
-      //  if (response.ok) {
-      //    const data = await response.json();
-      //    setTrail(data);
-      //    console.log(trail);
-      //  } else {
-      //    setTrail("Error fetching trail id=" + trail_id);
-      //  }
-      //} catch (error) {
-      //  setAppInfo("Error! Api Down?");
-      //}
       
-      const kkk = trails.filter(t => t.id === trail_id);
-      setTrail(kkk);
+
+      setTrail(trails[trail_id-1]);
     };
 
     useEffect(() => {
-      getTrail(trail_id); 
-    }, []);
+      getTrail(trail_id);
+    }, [trail_id, trails]);
+  
 
     const [startTime, setStartTime] = useState(null);
     const [isToggled, setToggle] = useState(false);
@@ -112,28 +98,70 @@ const Trail = () => {
 
     data = trail.edges;
 
+
+    const calcDifficulty = (dif) => {
+      if (dif === 'E') {
+        return 'Easy';
+      } else {
+        return 'pao'; 
+      }
+    };
+
+    const openGoogleMaps = () => {
+      if (!data || data.length === 0) return;
+    
+      const coordinates = data
+        .filter(edge => edge && edge.edge_start && edge.edge_end)
+        .map(edge => ({
+          start: `${edge.edge_start.pin_lat},${edge.edge_start.pin_lng}`,
+          end: `${edge.edge_end.pin_lat},${edge.edge_end.pin_lng}`
+        }));
+      
+      const waypoints = coordinates.map(coord => coord.start).join('|');
+      //console.log(waypoints)
+      //console.log(coordinates)
+      const destination = coordinates[coordinates.length - 1].end;
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&waypoints=${waypoints}`;
+    
+      Linking.openURL(url);
+    };
     
   return (
+    <ScrollView style={styles.container}>
+      <View style={styles.container}>
+        <View style={styles.containerCenter}>
+          <Text style={styles.title}>{trail.trail_name}</Text>
+          <Text style={styles.desc}>{trail.trail_desc}</Text>
+        </View>
 
-    <View style={styles.container}>
-        <Text style={styles.title}>{trail.trail_name}</Text>
-        <Text style={styles.title}>{trail.trail_desc}</Text>
-        <Text style={styles.title}>{trail.trail_duration} min</Text>
-        <Text style={styles.title}>Difficulty : {trail.trail_difficulty}</Text>
-
-        {trail.trail_img ? (
+        <View style={styles.containerImageMap}>
+          <View style={styles.imageContainer}>
             <Image 
               source={{ uri: trail.trail_img }} 
-              style={styles.trailImage}
-              onError={() => console.log('Error loading image:', trail.trail_img)} 
+              style={styles.image}
+              onError={() => console.log("Error loading image")}
             />
-          )  :(
-            <Text style={styles.title}>No image available</Text>
-          )}
+            <View style={styles.trailDescContainer}>
+              <Icon size={15} color="black" name="access-time" style={styles.searchIcon}/>
+              <Text style={styles.trailDuration}>{trail.trail_duration} min</Text>
+            </View>
+            <View style={styles.trailDescContainer}>
+              <Icon size={15} color="black" name="trending-up" style={styles.searchIcon}/>
+              <Text style={styles.trailDuration}>{calcDifficulty(trail.trail_difficulty)}</Text>
+            </View>
+          </View>
+          <MapComponent data={data} style={styles.map} />
+        </View>
 
-        <MapComponent data={data} />
-    </View>
-  )
+        <View style={styles.containerCenter}>
+          <TouchableOpacity style={styles.button} onPress={openGoogleMaps}>
+            <Text style={styles.buttonText}>Start Trail</Text>
+          </TouchableOpacity>
+        </View>
+
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -141,55 +169,93 @@ const styles = StyleSheet.create({
     backgroundColor: cores.uminho, // Set your desired background color
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 5,
-    elevation: 3, // Add shadow on Android
+    marginTop: 10,
+    borderRadius: 30,
+    elevation: 1, // Add shadow on Android
+    width: '50%',
+    marginBottom: 85
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
-    marginBottom: 10,
+  buttonText: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    color: 'white',
+    textAlign: 'center',
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    padding: 15,
     backgroundColor : 'white',
 
   },
+  containerCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  containerImageMap: {
+    flexDirection: 'row',
+    alignItems: 'flex-start', // Align items to the start of the cross axis (vertically in this case)
+    paddingVertical: 20,
+  },
+  imageContainer: {
+    width: '50%', // Take half of the parent container's width
+    marginRight: 15, // Spacing between image and map
+  },
   image: {
-    width: 200,  // Set the desired width
-    height: 200, // Set the desired height
-    marginBottom: 20,
-    resizeMode: 'contain', // This ensures the image is scaled to fit the container
+    width: '100%',
+    height: undefined,
+    aspectRatio: 1,
+    resizeMode: 'contain',
+    marginBottom: 10,
   },
   title: {
-    fontSize: 15,
+    fontSize: 22,
     fontWeight: 'bold',
-    //marginBottom: 55,
+    marginTop: 15,
+    marginBottom: 20,
+    color : cores.uminho
+  },
+  desc: {
+    fontSize: 16,
+    fontWeight: 'normal',
+    marginBottom: 20,
     color : 'black'
   },
-  trailItem: {
+    map: {
+      width: '40%',
+      height: '100%', // Adjust the height here to make the map smaller
+    },
+    trailItem: {
       marginRight: 16,
       alignItems: 'center',
+      height: 200,
+      backgroundColor: '#FFF7F7',
+      borderRadius: 15,
+      elevation: 4
     },
     trailImage: {
-      width: 100,
-      height: 100,
-      borderRadius: 8,
+      width: 150,
+      height: 150,
+      borderTopLeftRadius: 15,
+      borderTopRightRadius: 15
     },
     trailName: {
       marginTop: 8,
-      fontSize: 16,
+      fontSize: 14,
       color : 'black',
-      fontWeight: 'bold',
+      fontWeight: '600'
     },
-    map: {
-      width: '100%',
-      height: 150, // Adjust the height here to make the map smaller
+    trailDescContainer: {
+      marginTop: 2,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'ceenter',
     },
+    trailDuration: {
+      paddingHorizontal: 3,
+      fontSize: 12,
+      color : 'black',
+      fontWeight: '3~400'
+    }
 });
 
 export default Trail;

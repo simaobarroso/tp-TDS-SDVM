@@ -1,11 +1,12 @@
 import { View, Text, Image  } from 'react-native';
-import { StyleSheet, FlatList} from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import { updateUsername } from '../actions/user';
 import { updateAppInfo, setTrails } from '../actions/appData';
 import {cores, api} from '../var.js'
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 /* TO-DO:
 - Meter isto a funcionar com redux
 - Melhorar design / por a funcionar dark/ligth thene
@@ -26,6 +27,8 @@ const HomeScreen = () => {
     const trails  = useSelector(state => state.data.appData.trails);
     const appinfo = useSelector(state => state.data.appData.appinfo);
 
+    const navigation = useNavigation();
+
   
     const updateInfo = async () => {
 
@@ -43,80 +46,128 @@ const HomeScreen = () => {
     // <Image source={{ uri: item.image }} style={styles.trailImage} />
 
     const renderTrail = ({ item }) => (
-        <View style={styles.trailItem}>
+      <TouchableOpacity
+      style={styles.trailItem}
+      onPress={() => navigation.navigate('Trail', { trail_id: item.id })}
+      >
           <Image source={{ uri: item.trail_img }} style={styles.trailImage} />
           <Text style={styles.trailName}>{item.trail_name}</Text>
-        </View>
+          <View style={styles.trailDescContainer}>
+            <Icon size={15} color="black" name="access-time" style={styles.searchIcon}/>
+            <Text style={styles.trailDuration}>{item.trail_duration}</Text>
+          </View>
+        </TouchableOpacity>
       );
 
 
   
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.title}>{appInfo}</Text>
-        
-        <FlatList
-        data={trails}
-        renderItem={renderTrail}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      />
-        <Text style={styles.title}>{appDesc}</Text>
+        <View style={styles.topBar}>
+          <Image source={require('../../assets/logo_white.png')} style={styles.logo} />
+          <Text style={styles.title}>{appInfo}</Text>
+        </View>
+
+        <View style={styles.container2}>
+          <Text style={[styles.outTrails, { textAlign: 'left', alignSelf: 'flex-start', marginLeft: 0}]}>{"Our Trails"}</Text>
+
+          
+          <FlatList
+          data={trails}
+          renderItem={renderTrail}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+          <Text style={styles.appDesc}>{appDesc}</Text>
+          </View>
       </View>
     );
 };
 
 const styles = StyleSheet.create({
-    button: {
-      backgroundColor: cores.uminho, // Set your desired background color
-      paddingHorizontal: 20,
-      paddingVertical: 10,
-      borderRadius: 5,
-      elevation: 3, // Add shadow on Android
-    },
-    inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      borderBottomWidth: 1,
-      borderBottomColor: 'white',
-      marginBottom: 10,
-    },
     container: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      padding: 20,
-      backgroundColor : 'white',
+      padding: 0,
+      backgroundColor : 'white'
   
     },
-    image: {
-      width: 200,  // Set the desired width
-      height: 200, // Set the desired height
-      marginBottom: 20,
-      resizeMode: 'contain', // This ensures the image is scaled to fit the container
+    container2: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 0,
+      backgroundColor : 'white',
+      paddingHorizontal: 12
+    },
+    topBar: {
+      flexDirection: 'row',
+      backgroundColor: cores.uminho, 
+      alignItems: 'center',
+      paddingHorizontal: 12,
+      height: 70, 
+      width: '100%',
+      marginBottom: 20
     },
     title: {
-      fontSize: 24,
+      paddingVertical: 15,
+      paddingHorizontal: 10,
+      fontSize: 18,
       fontWeight: 'bold',
-      marginBottom: 55,
+      color : 'white'
+    },
+    logo: {
+      paddingVertical: 15,
+      width: 30,
+      height: 40,
+      borderRadius: 8
+    },
+    outTrails: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 15,
+      color : 'black',
+      textAlign: 'left'
+    },
+    appDesc: {
+      fontSize: 16,
+      fontWeight: 'normal',
+      marginBottom: 290,
       color : 'black'
     },
     trailItem: {
         marginRight: 16,
         alignItems: 'center',
+        height: 200,
+        backgroundColor: '#FFF7F7',
+        borderRadius: 15,
+        elevation: 4
       },
       trailImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 8,
+        width: 150,
+        height: 150,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15
       },
       trailName: {
         marginTop: 8,
-        fontSize: 16,
+        fontSize: 14,
         color : 'black',
-        fontWeight: 'bold',
+        fontWeight: '600'
+      },
+      trailDescContainer: {
+        marginTop: 2,
+        flexDirection: 'row',
+        justifyContent: 'left',
+        alignItems: 'left',
+      },
+      trailDuration: {
+        paddingHorizontal: 3,
+        fontSize: 12,
+        color : 'black',
+        fontWeight: '3~400'
       }
   });
 export default HomeScreen;

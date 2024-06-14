@@ -1,11 +1,12 @@
 import { View, Text,TextInput, Image  } from 'react-native';
-import { StyleSheet, FlatList} from 'react-native';
+import { StyleSheet, FlatList,  KeyboardAvoidingView,  TouchableOpacity, SafeAreaView } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUsername } from '../actions/user';
 import { updateAppInfo, setTrails } from '../actions/appData';
-import {cores, api} from '../var.js'
-
+import { useNavigation } from '@react-navigation/native';
+import {cores, api, api2} from '../var.js'
+import Icon from 'react-native-vector-icons/MaterialIcons';
 /* To-DO:
 - Melhorar interface
 - Fazer redirects
@@ -24,6 +25,8 @@ const Search = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredTrails, setFilteredTrails] = useState(trails);
+
+  const navigation = useNavigation();
 
 
   const updateInfo = async () => {
@@ -72,96 +75,113 @@ const Search = () => {
 
 
     const renderTrail = ({ item }) => (
-        <View style={styles.trailItem}>
+      <TouchableOpacity
+          style={styles.trailItem}
+          onPress={() => navigation.navigate('Trail', { trail_id: item.id })}
+      >
           <Image source={{ uri: item.trail_img }} style={styles.trailImage} />
           <Text style={styles.trailName}>{item.trail_name}</Text>
-        </View>
-      );
+      </TouchableOpacity>
+  );
 
 
-  
-    return (
-      <View style={styles.container}>
+  return (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <SafeAreaView style={styles.container}>
+        <View style={styles.topBar}>
+          <View style={styles.inputContainer}>
+            <Icon size={23} color="black" name="search" />
+            <TextInput
+                style={styles.input}
+                placeholder="Search by trail name"
+                placeholderTextColor={"gray"}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+              </View>
+          </View>
 
-    <TextInput
-        style={styles.input}
-        placeholder="Search by trail name"
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-
-        
-        <FlatList
-        data={filteredTrails}
-        renderItem={renderTrail}
-        keyExtractor={(item) => item.id.toString()}
-        vertical
-        showsHorizontalScrollIndicator={false}
-      />
-      </View>
-    );
+            
+            <FlatList
+              data={filteredTrails}
+              renderItem={renderTrail}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+              style={styles.list}
+              contentContainerStyle={styles.listContent}
+          />
+      </SafeAreaView>
+    </KeyboardAvoidingView>
+  );
 };
 
 const styles = StyleSheet.create({
-    button: {
-      backgroundColor: cores.uminho, // Set your desired background color
-      paddingHorizontal: 20,
-      paddingVertical: 10,
-      borderRadius: 5,
-      elevation: 3, // Add shadow on Android
-    },
-    inputContainer: {
+topBar: {
+  backgroundColor: cores.uminho, 
+  alignItems: 'center',
+  paddingHorizontal: 12,
+  height: 70, 
+  width: '100%',
+  marginBottom: 20
+},
+inputContainer: {
+  marginTop: 15,
+  flexDirection: 'row',
+  alignItems: 'center',
+  width: '95%',
+  height: 40,
+  borderColor: 'gray',
+  borderWidth: 1,
+  borderRadius: 25,
+  paddingHorizontal: 10,
+  backgroundColor: 'white'
+},
+searchIcon: {
+    marginRight: 10,
+},
+input: {
+  flex: 1,
+  paddingVertical: 0,
+  color: 'black'
+},
+  container: {
+    flex: 1,
+    backgroundColor : 'white',
+    //marginBottom: 50
+  },
+  list: {
+    flex: 1,
+    width: '100%',
+},
+listContent: {
+    alignItems: 'center',
+    paddingBottom:60
+},
+  trailItem: {
+      height: 150,
+      width: 300,
       flexDirection: 'row',
+      marginBottom: 0,
       alignItems: 'center',
-      borderBottomWidth: 1,
-      borderBottomColor: 'white',
-      marginBottom: 10,
+      //borderColor: 'gray',
+      borderWidth: 0.5,
+      borderTopColor: 'gray',
+      borderBottomColor: 'gray',
+      borderRightColor: 'white',
+      borderLeftColor: 'white',
     },
-    input: {
-        width: '80%',
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 20,
-        paddingHorizontal: 20,
-        color : 'black',
-        borderRadius: 5,
-      },
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      backgroundColor : 'white',
-  
+    trailImage: {
+      width: 100,
+      height: 100,
+      borderRadius: 8,
     },
-    image: {
-      width: 200,  // Set the desired width
-      height: 200, // Set the desired height
-      marginBottom: 20,
-      resizeMode: 'contain', // This ensures the image is scaled to fit the container
-    },
-    title: {
-      fontSize: 24,
+    trailName: {
+      paddingHorizontal: 15,
+      marginTop: 8,
+      fontSize: 16,
+      color : 'black',
       fontWeight: 'bold',
-      marginBottom: 55,
-      color : 'black'
-    },
-    trailItem: {
-        marginRight: 16,
-        alignItems: 'center',
-      },
-      trailImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 8,
-      },
-      trailName: {
-        marginTop: 8,
-        fontSize: 16,
-        color : 'black',
-        fontWeight: 'bold',
-      }
-  });
+    }
+});
 
 export default Search
