@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux'; 
 //import { useNavigation } from '@react-navigation/native';
 import {setCookies, updateUsername} from '../actions/user.js';
+import {setTrails, updateAppInfo} from '../actions/appData.js';
 import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen.jsx'
 
@@ -21,49 +22,28 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // carregado no getTitle()
-  //const [title, setTitle] = useState("Title");
-  //const [appInfo, setAppInfo] = useState("Loading");
-  //const [appDesc, setAppDesc] = useState("Loading");
-  // carregado no getTrails()
-  //const [trails, setTrails] = useState([]);
 
-  // usar isto 
-  const cookieState = useSelector(state => state.data.cookies.cookieVal); // aceder ao estado!!!!
+  const cookieState = useSelector(state => state.data.cookies.cookieVal);
   const userState   = useSelector(state => state.data.user.username);
-  
-  // actions para adicionar informacao
-
-  // reducers -> guardar / atualizar -> N\ao temos que mexer nisto
-
-  // selectors -> ir buscar
-
-  //dispatch(setCookies(cookies)); // usar isto dentro de um use effect sempre
-
-  //  use effect{
-  //} [dispatch , VARIAVEIS] // as vezes
 
 
-  const getTitle = async () => {
+  const getAppInfo = async () => {
     try {
       const response = await fetch(api + 'app');
       if (response.ok) {
         const data = await response.json();
-        //setTitle(data[0].app_name);
-        //setAppInfo(data[0].app_desc);
-        //setAppDesc(data[0].app_landing_page_text);
-        //console.log(data[0].app_landing_page_text);
-        dispatch(updateAppInfo(data));
+  
+        dispatch(updateAppInfo(data[0]));
+        console.log('App Info:', data[0]);
       } else {
-        // FIXME coloco dispatch com erros?
-        console.log("Error fetching app ifo");
-        dispatch(updateAppInfo("Error fetching app ifo"));
-        //setAppInfo("Error fetching app ifo");
+        // Dispatch an error message if the response is not ok
+        console.log("Error fetching app info!!");
+        dispatch(updateAppInfo("Error fetching app info"));
       }
     } catch (error) {
-      console.log("Error fetching data!!!");
-      dispatch(updateAppInfo("Error fetching app ifo"));
-      //setAppInfo("Error fetching data!");
+      // Log and dispatch an error message in case of an exception
+      console.log("Error fetching data!!!", error);
+      dispatch(updateAppInfo("Error fetching app info"));
     }
   };
 
@@ -80,21 +60,8 @@ const Login = () => {
       }
   }
 
-  //const getContact = async () => {
-  //  try {
-  //    const response = await fetch(api + 'app');
-  //    if (response.ok) {
-  //      const data = await response.json();
-  //      setContact(data[0].contacts);
-  //      //console.log(data[0].contacts);
-//
-  //    } else {
-  //        setContact("Error fetching contacts");
-  //    }
-  //  } catch (error) {
-  //    setContact("Error fetching data");
-  //  }
-  //};
+
+
   const getUserFunc = () => {
     fetch(api + 'user', {
       method: 'GET',
@@ -123,63 +90,64 @@ const Login = () => {
 
 
   useEffect(() => {
-    //getTitle();
-    //getTrails();
+    getAppInfo();
+    getTrails();
   }, []);
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch(api + 'login', {
+const handleLogin = () => {
+    fetch(api + 'login', {
         credentials: 'omit',
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: username.trim(),
-          email: "",
-          password: password,
+            username: username.trim(),
+            email: "",
+            password: password,
         }),
-      });
-  
-      if (!response.ok) {
-        Alert.alert('Wrong Credentials');
-        return;
-      }
-  
-      console.log(cookieState);
-      console.log("response ok");
-      const cookies = response.headers.map['set-cookie'];
-      console.log('-> ' +cookies)
-      const csrfTokenMatch = cookies.match(/csrftoken=([^;]+)/);
-      const sessionIdMatch = cookies.match(/sessionid=([^;]+)/);
-      const csrfToken = csrfTokenMatch ? csrfTokenMatch[0] : null;
-      const sessionId = sessionIdMatch ? sessionIdMatch[0] : null;
-      console.log(csrfToken);
-      console.log(sessionId);
+    })
+    .then(response => {
+        if (!response.ok) {
+            Alert.alert('Wrong Credentials');
+            throw new Error('Wrong Credentials');
+        }
+        return response;
+    })
+    .then(response => response.headers)
+    .then(headers => {
+        const cookies = headers.map['set-cookie'];
+        const csrfTokenMatch = cookies.match(/csrftoken=([^;]+)/);
+        const sessionIdMatch = cookies.match(/sessionid=([^;]+)/);
+        const csrfToken = csrfTokenMatch ? csrfTokenMatch[0] : null;
+        const sessionId = sessionIdMatch ? sessionIdMatch[0] : null;
+        console.log(csrfToken);
+        console.log(sessionId);
 
-      dispatch(updateUsername(username.trim())); // assim que se guarda
-  
-      if (csrfTokenMatch.length === 2) {
-        // Save cookies in Redux store
-        console.log("Saved Cookie");
-        dispatch(setCookies(csrfToken + ';' + sessionId));
-      }
+        dispatch(updateUsername(username.trim())); // Update the username in the store
 
-      console.log('cookies1 : ' + cookieState);
-      console.log('username1 : ' +userState);
-  
-      getUserFunc();
+        if (csrfTokenMatch && sessionIdMatch) {
+            // Save cookies in Redux store
+            console.log("Saved Cookie");
+            dispatch(setCookies(csrfToken + ';' + sessionId));
+        }
 
-      console.log('cookies222 : ' + cookieState);
-      console.log('username222 : ' +userState);
-  
-      // Uncomment and adjust the navigation logic as needed
-      // navigation.navigate('HomeScreen', { HomeScreen });
-    } catch (error) {
-      Alert.alert('Login Failed', `Error: ${error.message}`);
-    }
-  };
+        console.log('cookies1 : ' + cookieState);
+        console.log('username1 : ' + userState);
+
+        return getUserFunc();
+    })
+    .then(() => {
+        console.log('cookies222 : ' + cookieState);
+        console.log('username222 : ' + userState);
+
+        // Uncomment and adjust the navigation logic as needed
+        // navigation.navigate('HomeScreen', { HomeScreen });
+    })
+    .catch(error => {
+        Alert.alert('Login Failed', `Error: ${error.message}`);
+    });
+};
 
 
 
@@ -216,8 +184,6 @@ const Login = () => {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text>Login!</Text>
       </TouchableOpacity>
-
-
   </View>
   )
 }

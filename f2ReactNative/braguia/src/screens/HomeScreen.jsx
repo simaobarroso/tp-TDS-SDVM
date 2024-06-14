@@ -25,13 +25,14 @@ const HomeScreen = () => {
 
     const trails  = useSelector(state => state.data.appData.trails);
     const appinfo = useSelector(state => state.data.appData.appinfo);
+
   
     const updateInfo = async () => {
         // GUARDO LOCALMENTE?
          
-        setTitle(appinfo[0].app_name);
-        setAppInfo(appinfo[0].app_desc);
-        setAppDesc(appinfo[0].app_landing_page_text);
+        setTitle(appinfo.app_name);
+        setAppInfo(appinfo.app_desc);
+        setAppDesc(appinfo.app_landing_page_text);
         //console.log(data[0].app_landing_page_text);
 
     };

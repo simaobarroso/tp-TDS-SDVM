@@ -27,17 +27,17 @@ const TabNavigator = () => {
                 tabBarStyle: styles.tabBarStyle,
                 // tabBarBackground: () => (<BlurView overlayColor = '' bluramount={15} style={styles.BluerViewStyles}/>),
             }}>
-
-                <Tab.Screen name="Settings" component={Home} options={{
-                    tabBarIcon: ({focused, color, size}) => (
-                    <Icon size={25} color="white" name="settings" />
-                    )
-                }}/>
-                <Tab.Screen name="Home" component={Login} options={{
+                <Tab.Screen name="Login" component={Login} options={{
                     tabBarIcon: ({focused, color, size}) => (
                     <Icon size={25} color="white" name="home" />
                     )
                 }}/>
+                <Tab.Screen name="Home" component={Home} options={{
+                    tabBarIcon: ({focused, color, size}) => (
+                    <Icon size={25} color="white" name="Home" />
+                    )
+                }}/>
+
                 <Tab.Screen name="Search" component={Search} options={{
                     tabBarIcon: ({focused, color, size}) => (
                         <Icon size={25} color="white" name="search" />

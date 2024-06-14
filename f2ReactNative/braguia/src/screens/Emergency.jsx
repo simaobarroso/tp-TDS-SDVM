@@ -13,33 +13,13 @@ import {cores, api} from '../var.js'
 */
 
 const Emergency = () => {
-    const [contacts, setContact] = useState("Loading");
 
-    const appinfo = useSelector(state => state.data.appData.appinfo);
-
-    const updateContact = async () => {
-      setContact(appinfo.contacts);
-    };
-    //const getContact = async () => {
-    //  try {
-    //    const response = await fetch(api + 'app');
-    //    if (response.ok) {
-    //      const data = await response.json();
-    //      setContact(data[0].contacts);
-    //      //console.log(data[0].contacts);
-//
-    //    } else {
-    //        setContact("Error fetching contacts");
-    //    }
-    //  } catch (error) {
-    //    setContact("Error fetching data");
-    //  }
-    //};
+    const contacts = useSelector(state => state.data.appData.appinfo.contacts);
 
 
-    useEffect(() => {
-        updateContact();
-    }, []);
+    console.log("ola!!!");
+    console.log(contacts);
+
     // <Image source={{ uri: item.image }} style={styles.trailImage} />
 
     const renderPhone = ({ item }) => (
