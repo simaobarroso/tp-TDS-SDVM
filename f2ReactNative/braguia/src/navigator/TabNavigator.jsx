@@ -34,7 +34,7 @@ const TabNavigator = () => {
                 }}/>
                 <Tab.Screen name="Home" component={Home} options={{
                     tabBarIcon: ({focused, color, size}) => (
-                    <Icon size={25} color="white" name="Home" />
+                    <Icon size={25} color="white" name="home" />
                     )
                 }}/>
 
@@ -48,16 +48,6 @@ const TabNavigator = () => {
                         <Icon size={25} color="white" name="call" />
                         )
                 }}/>
-                <Tab.Screen 
-                        name="Trail" 
-                        component={Trail}  
-                        options={{
-                        tabBarIcon: ({ focused, color, size }) => (
-                            <Icon size={25} color="white" name="directions-walk" />
-                        ), 
-                        }} 
-                        initialParams={{ trailId: '1' }} // Set initialParams here
-                    />
                 <Tab.Screen name="User" component={User} options={{
                     tabBarIcon: ({focused, color, size}) => (
                         <Icon size={25} color="white" name="history" />

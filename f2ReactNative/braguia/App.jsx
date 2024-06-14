@@ -8,6 +8,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {View, Text,StyleSheet} from 'react-native';
 import HomeScreen from './src/screens/HomeScreen';
 import Login from './src/screens/Login';
+import Trail from './src/screens/Trail';
 import Search from './src/screens/Search';
 import Emergency from './src/screens/Emergency';
 import TabNavigator from './src/navigator/TabNavigator';
@@ -34,6 +35,7 @@ const App = () => {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="Search" component={Search} />
+            <Stack.Screen name="Trail" component={Trail} />
             </Stack.Navigator>
             </NavigationContainer>
       </PersistGate>
