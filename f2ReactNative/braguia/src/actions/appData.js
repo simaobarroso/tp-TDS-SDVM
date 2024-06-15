@@ -10,6 +10,12 @@ export const setTrails = (trails) => ({
   trails
 });
 
+export const SET_APP_PINS = 'SET_APP_PINS';
+export const setPins = (pins) => ({
+  type: SET_APP_PINS,
+  pins
+});
+
 // usa se isto quando se da logout !!!
 export const RESET_APP_DATA = 'RESET_APP_DATA';
 export const resetAppData = () => ({

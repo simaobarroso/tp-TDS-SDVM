@@ -27,3 +27,14 @@ export const RESET_STATE = 'RESET_STATE';
 export const resetState = () => ({
   type: RESET_STATE,
 });
+
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const loginSuccess = (username, cookies) => ({
+  type: 'LOGIN_SUCCESS',
+  payload: { username, cookies },
+});
+
+export const LOGOUT = 'LOGOUT';
+export const logout = () => ({
+  type: 'LOGOUT',
+});

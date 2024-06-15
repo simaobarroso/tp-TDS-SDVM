@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { UPDATE_USERNAME , SET_COOKIES , ADD_TRIP, SET_DISTANCE,RESET_STATE} from '../actions/user';
+import { UPDATE_USERNAME , SET_COOKIES , ADD_TRIP, SET_DISTANCE,RESET_STATE, LOGIN_SUCCESS, LOGOUT} from '../actions/user';
 import {SET_APP_INFO, SET_APP_TRAILS, RESET_APP_DATA} from '../actions/appData';
 
 const user  = (user = { username: ''}, action) => {
@@ -77,4 +77,27 @@ const appData = (state = { appinfo: null, trails: [] }, action) => {
   }
 };
 
-export default combineReducers({ user, cookies, trips, appData,distance });
+const initialState = {
+  isLoggedIn: false,
+  username: '',
+  cookies: ''
+};
+
+const authReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case LOGIN_SUCCESS:
+      return {
+        ...state,
+        isLoggedIn: true,
+        username: action.payload.username,
+        cookies: action.payload.cookies
+      };
+    case LOGOUT:
+      return initialState;
+    default:
+      return state;
+  }
+};
+
+
+export default combineReducers({ user, cookies, trips, appData,distance , authReducer});

@@ -4,8 +4,8 @@ import {cores, api} from '../var.js';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux'; 
 //import { useNavigation } from '@react-navigation/native';
-import {setCookies, updateUsername} from '../actions/user.js';
-import {setTrails, updateAppInfo} from '../actions/appData.js';
+import {setCookies, updateUsername, loginSuccess, logout} from '../actions/user.js';
+import {setTrails, updateAppInfo, setPins} from '../actions/appData.js';
 import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen.jsx'
 
@@ -17,6 +17,7 @@ TO-DO:
 const Login = () => {
 
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -60,7 +61,18 @@ const Login = () => {
       }
   }
 
-
+  const getPins = async () => {
+    try{
+        const response = await fetch(api + 'pins');
+        if (response.ok) {
+            const data = await response.json();
+            dispatch(setPins(data));
+        }
+    }
+    catch (error) {
+        dispatch(setPins("Error fetchin pins:", error));
+    }
+}
 
   const getUserFunc = () => {
     fetch(api + 'user', {
@@ -92,62 +104,56 @@ const Login = () => {
   useEffect(() => {
     getAppInfo();
     getTrails();
+    getPins();
   }, []);
 
-const handleLogin = () => {
+  const handleLogin = () => {
     fetch(api + 'login', {
-        credentials: 'omit',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username.trim(),
-            email: "",
-            password: password,
-        }),
+      credentials: 'omit',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: username.trim(),
+        email: "",
+        password: password,
+      }),
     })
-    .then(response => {
+      .then(response => {
         if (!response.ok) {
-            Alert.alert('Wrong Credentials');
-            throw new Error('Wrong Credentials');
+          Alert.alert('Wrong Credentials');
+          throw new Error('Wrong Credentials');
         }
         return response;
-    })
-    .then(response => response.headers)
-    .then(headers => {
+      })
+      .then(response => response.headers)
+      .then(headers => {
         const cookies = headers.map['set-cookie'];
         const csrfTokenMatch = cookies.match(/csrftoken=([^;]+)/);
         const sessionIdMatch = cookies.match(/sessionid=([^;]+)/);
         const csrfToken = csrfTokenMatch ? csrfTokenMatch[0] : null;
         const sessionId = sessionIdMatch ? sessionIdMatch[0] : null;
-        console.log(csrfToken);
-        console.log(sessionId);
 
         dispatch(updateUsername(username.trim())); // Update the username in the store
 
         if (csrfTokenMatch && sessionIdMatch) {
-            // Save cookies in Redux store
-            console.log("Saved Cookie");
-            dispatch(setCookies(csrfToken + ';' + sessionId));
+          // Save cookies in Redux store
+          dispatch(setCookies(csrfToken + ';' + sessionId));
         }
 
-        console.log('cookies1 : ' + cookieState);
-        console.log('username1 : ' + userState);
+        dispatch(loginSuccess(username.trim(), csrfToken + ';' + sessionId));
 
-        return getUserFunc();
-    })
-    .then(() => {
-        console.log('cookies222 : ' + cookieState);
-        console.log('username222 : ' + userState);
+        
 
-        // Uncomment and adjust the navigation logic as needed
-        // navigation.navigate('HomeScreen', { HomeScreen });
-    })
-    .catch(error => {
+        // Navigate to HomeScreen upon successful login
+        navigation.navigate('HomeScreen');
+      })
+      .catch(error => {
         Alert.alert('Login Failed', `Error: ${error.message}`);
-    });
-};
+      });
+  };
+
 
 
 
