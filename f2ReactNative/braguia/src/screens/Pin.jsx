@@ -6,28 +6,45 @@ import { updateUsername } from '../actions/user';
 import { updateAppInfo, setTrails } from '../actions/appData';
 import { useNavigation } from '@react-navigation/native';
 import {cores, api, api2} from '../var.js'
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { MapUrlTile, Marker, Polyline } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Video from 'react-native-video';
+import Sound from 'react-native-sound';
+
 
 
 const Pin = ({ route }) => {
-  const { pin_id } = route.params;
+  const { pin_id, trail_id } = route.params;
 
-  
-    const [pin, setPin] = useState("Loading!");
+  const [trail, setTrail] = useState("Loading!");
 
-    const pins  = useSelector(state => state.data.appData.pins);
+    const trails  = useSelector(state => state.data.appData.trails);
 
 
-    const getPin = async (pin_id) => {
+    const getTrail = async (trail_id) => {
       
 
-      setPin(pins.filter(item => item.id == pin_id));
-    };
+        setTrail(trails[trail_id-1]);
+      };
+  
+      useEffect(() => {
+        getTrail(trail_id);
+      }, [trail_id, trails]);
 
-    useEffect(() => {
-      getPin(pin_id);
-    }, [pin_id, pins]);
+  
+      const transformedData = trail && trail.edges && trail.edges.length > 0 
+  ? [trail.edges[0].edge_start, ...trail.edges.map(edge => edge.edge_end)] 
+  : [];
+
+  const pin = transformedData.filter(edge => edge.id == pin_id)[0]
+
+  useEffect(() => {
+    console.log('Pin updated:', pin);
+  }, [pin, pin_id]);
+
+  console.log(pin)
+  if (pin) console.log(pin.pin_name)
+
   
 
     const [startTime, setStartTime] = useState(null);
@@ -39,43 +56,77 @@ const Pin = ({ route }) => {
       setToggle(!isToggled);
     };
 
+    if (!pin) {
+      return null; // or return a fallback UI
+    }
+
+    let imageUri = null
+    let audioUri = null
+    let videoUri = null
+
+    const image = pin.media.filter(x => x.media_type == 'I')[0]
+    if(image) imageUri = image.media_file
+    //console.log(image)
+
+    const audio = pin.media.filter(x => x.media_type == 'R')[0]
+    if(audio) audioUri = audio.media_file
+
+    const video = pin.media.filter(x => x.media_type == 'V')[0]
+    if(video) videoUri = video.media_file
+
+
+    const playAudio = () => {
+      if (audioUri) {
+        const sound = new Sound(audioUri, Sound.MAIN_BUNDLE, (error) => {
+          if (error) {
+            console.log('Failed to load the sound', error);
+            return;
+          }
+          // Play the sound with an onEnd callback
+          sound.play((success) => {
+            if (success) {
+              console.log('Successfully finished playing');
+            } else {
+              console.log('Playback failed due to audio decoding errors');
+            }
+          });
+        });
+      }
+    };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.container}>
         <View style={styles.containerCenter}>
           <Text style={styles.title}>{pin.pin_name}</Text>
+
+          {imageUri && (
+          <Image
+            source={{ uri: imageUri }}
+            style={styles.image}
+            onError={() => console.log("Error loading image")}
+          />
+        )}
+
           <Text style={styles.desc}>{pin.pin_desc}</Text>
-        </View>
-        {/*
-        <View style={styles.containerImageMap}>
-          <View style={styles.imageContainer}>
-            <Image 
-              source={{ uri: trail.trail_img }} 
-              style={styles.image}
-              onError={() => console.log("Error loading image")}
-            />
-            <View style={styles.trailDescContainer}>
-              <Icon size={15} color="black" name="access-time" style={styles.searchIcon}/>
-              <Text style={styles.trailDuration}>{trail.trail_duration} min</Text>
-            </View>
-            <View style={styles.trailDescContainer}>
-              <Icon size={15} color="black" name="trending-up" style={styles.searchIcon}/>
-              <Text style={styles.trailDuration}>{calcDifficulty(trail.trail_difficulty)}</Text>
-            </View>
-          </View>
-          <MapComponent data={data} style={styles.map} />
-        </View>
 
-        <View style={styles.containerButtons}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Edges', { trail_id: trail_id })}>
-            <Text style={styles.buttonText}>See pins</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => openGoogleMaps()}>
-            <Text style={styles.buttonText}>Start Trail</Text>
-          </TouchableOpacity>
-  </View>*/}
+          {videoUri && (
+          <Video
+            source={{ uri: videoUri }}
+            style={styles.video}
+            controls={true}
+            resizeMode="contain"
+            onError={(error) => console.log("Error loading video:", error)}
+          />
+        )}
 
+        {audioUri && (
+          <TouchableOpacity style={styles.button} onPress={() => playAudio()}>
+            <Text style={styles.buttonText}>Play Audio</Text>
+          </TouchableOpacity>
+        )}
+
+        </View>
       </View>
     </ScrollView>
   );
@@ -90,12 +141,12 @@ const styles = StyleSheet.create({
     margin:10,
     borderRadius: 30,
     elevation: 1, // Add shadow on Android
-    width: '45%',
+    width: '47%',
     marginBottom: 85
   },
   buttonText: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     color: 'white',
     textAlign: 'center',
   },
@@ -124,17 +175,16 @@ const styles = StyleSheet.create({
     marginRight: 15, // Spacing between image and map
   },
   image: {
-    width: '100%',
-    height: undefined,
+    height: 200,
     aspectRatio: 1,
     resizeMode: 'contain',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginTop: 15,
-    marginBottom: 20,
+    marginBottom: 30,
     color : cores.uminho
   },
   desc: {
@@ -178,7 +228,13 @@ const styles = StyleSheet.create({
       fontSize: 12,
       color : 'black',
       fontWeight: '3~400'
-    }
+    },
+    video: {
+      width: '100%',
+      height: 200,
+      backgroundColor: '#000',
+      marginVertical: 10,
+    },
 });
 
 export default Pin;

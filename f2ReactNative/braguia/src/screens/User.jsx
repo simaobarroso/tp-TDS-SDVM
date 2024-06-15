@@ -1,8 +1,9 @@
 import React, {useContext} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector,useDispatch } from 'react-redux';
-import Icon from 'react-native-vector-icons/EvilIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {resetState} from '../actions/user.js';
+import {cores} from '../var.js'
 
 
 
@@ -10,7 +11,7 @@ const User = () => {
     const dispatch = useDispatch();
 
 
-    const userMetaData = useSelector((state) => state.data.user.username);
+    const userMetaData = useSelector((state) => state.data.user);
     const {
       username,
       email,
@@ -28,27 +29,26 @@ const User = () => {
 
       return (
         <View style={[styles.container, ]}>
-          <View style={styles.content}>
             <View style={styles.profileContainer}>
               <View style={styles.backgroundContainer}>
-              <Icon size={250} color="white" name="user" />
-                <Text style={[styles.username, {color:'black'}]}>{username}</Text>
-                <Text style={[styles.infoTitle, {color:'black'}]}>User type : {user_type}</Text>
+              <Icon size={250} color="white" name="person" />
+                <Text style={styles.username}>{username}</Text>
+                <Text style={styles.infoTitle}>User type : {user_type}</Text>
               </View>
             </View>
     
             <View style={styles.detailContainer}>
               <View style={styles.detailRow}>
-                <Icon name="calendar" size={36} color="#000000" style={{color:'black'}} />
-                <Text style={[styles.detailText, {color:'black'}]}>{username}</Text>
+                <Icon name="mail" size={36} style={{color:'black'}} />
+                <Text style={[styles.detailText, {color:'black'}]}>E-mail: {email}</Text>
               </View>
               <View style={styles.detailRow}>
 
               </View>
               <View style={styles.detailRow}>
-              <Icon name="calendar" size={36} color="#000000" style={{color:'black'}} />
+              <Icon name="calendar-month" size={36}  style={{color:'black'}} />
                 <Text style={[styles.detailText, {color:'black'}]}>
-                  Member since {formattedDateJoined}
+                  Member since: {formattedDateJoined}
                 </Text>
               </View>
             </View>
@@ -61,7 +61,6 @@ const User = () => {
               <Text style={styles.buttonText}>Logout!</Text>
             </TouchableOpacity>
 
-          </View>
         </View>
       );
 
@@ -69,23 +68,17 @@ const User = () => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    content: {
-      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
     },
     profileContainer: {
       height: 350,
-      width: 350,
+      width: 400,
       marginBottom: 20,
     },
     backgroundContainer: {
       flex: 1,
-      backgroundColor: '#FF0008',
+      backgroundColor: cores.uminho,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -94,12 +87,14 @@ const styles = StyleSheet.create({
       color: '#ffffff',
       fontSize: 21,
       fontWeight: 'bold',
+      color: 'white'
     },
     infoTitle: {
       fontSize: 20,
       fontWeight: 'bold',
       color: '#000000',
       marginTop: 10,
+      color: 'white'
     },
     userType: {
       color: '#FFFFFF',
@@ -121,22 +116,20 @@ const styles = StyleSheet.create({
       color: '#000000',
     },
     button: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#FF0008',
-      paddingHorizontal: 10,
+      backgroundColor: cores.uminho, // Set your desired background color
+      paddingHorizontal: 20,
       paddingVertical: 10,
-      borderRadius: 10,
-      marginBottom : 10, 
-      width: '50%', // Adjust the width as per your requirements
+      marginTop: 10,
+      margin:10,
+      borderRadius: 30,
+      elevation: 1, // Add shadow on Android
+      width: '45%',
     },
     buttonText: {
-      color: '#FFFFFF',
-      fontWeight: 'bold',
-      fontSize: 18,
-      marginLeft: 5,
-      marginRight: 10,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      color: 'white',
+      textAlign: 'center',
     },
   });
 

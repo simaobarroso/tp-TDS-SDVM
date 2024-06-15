@@ -44,19 +44,16 @@ const Edges = ({ route }) => {
   ? [trail.edges[0].edge_start, ...trail.edges.map(edge => edge.edge_end)] 
   : [];
 
-      const renderEdge = ({ item }) => (
-        <TouchableOpacity style={styles.edgeItem} onPress={() => navigation.navigate('Pin', { pin_id: item.id })}>
-          <Text style={styles.edgeName}>{item.pin_name}</Text>
-          {item.media.length > 0 && item.media[0].media_file &&
-            <Image
-              source={{ uri: item.media[0].media_file }}
-              style={styles.edgeImage}
-            />}
-        </TouchableOpacity>
-      );
+  const renderEdge = ({ item, index }) => (
+    <TouchableOpacity style={styles.edgeItem} onPress={() => navigation.navigate('Pin', { pin_id: item.id, trail_id: trail_id })}>
+      <Text style={styles.edgeName}>{index + 1}. {item.pin_name}</Text>
+    </TouchableOpacity>
+  );
 
     return (
           <View style={styles.container}>
+
+                <Text style={styles.title}>{trail.trail_name} points of interest</Text>
 
     
                 
@@ -76,7 +73,13 @@ const styles = StyleSheet.create({
       container: {
         flex: 1,
         backgroundColor : 'white',
-        //marginBottom: 50
+        alignItems: 'center'
+      },
+      title: {
+        margin: 30,
+        fontSize: 24,
+        fontWeight: 'bold',
+        color : cores.uminho
       },
       list: {
         flex: 1,
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
         paddingBottom:60
     },
       edgeItem: {
-          height: 150,
+          height: 75,
           width: 300,
           flexDirection: 'row',
           marginBottom: 0,
@@ -98,11 +101,6 @@ const styles = StyleSheet.create({
           borderBottomColor: 'gray',
           borderRightColor: 'white',
           borderLeftColor: 'white',
-        },
-        edgeImage: {
-          width: 100,
-          height: 100,
-          borderRadius: 8,
         },
         edgeName: {
           paddingHorizontal: 15,
