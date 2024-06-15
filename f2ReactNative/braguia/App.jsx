@@ -67,6 +67,8 @@ const AppNavigator = () => {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Search" component={Search} />
           <Stack.Screen name="Trail" component={Trail} />
+          <Stack.Screen name="Edges" component={Edges} />
+          <Stack.Screen name="Pin" component={Pin} />
           </>
       </Stack.Navigator>
     </NavigationContainer>
