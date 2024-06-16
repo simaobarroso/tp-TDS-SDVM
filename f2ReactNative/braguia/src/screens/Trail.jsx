@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity  } from 'react-native';
+import { View, Text, Image, Alert, TouchableOpacity ,PermissionsAndroid } from 'react-native';
 import { StyleSheet, FlatList , ScrollView, Linking} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,15 +8,10 @@ import { useNavigation } from '@react-navigation/native';
 import {cores, api, api2} from '../var.js'
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-/* !!!
-NOTA: ALVIM MUda me isto sff
-Neste momento so estou a fazer o pedido de um trail especifico. Ora esta pagina vai servir para todos os trails. É uma abstração.
+import startLocationTracking from '../backgroundServices/Tracker.js';
+import Geolocation from '@react-native-community/geolocation';
+import PushNotification from 'react-native-push-notification';
 
-Ou seja mudar:
-
-Em vez de pedir um trail especifico, recebe um argumento de um trail e expoe esse trail
-
-*/
 
 const MapComponent = ({ data }) => {
     if (!data || data.length === 0) {
@@ -70,12 +65,13 @@ const MapComponent = ({ data }) => {
 const Trail = ({ route }) => {
   const { trail_id } = route.params;
 
-  
-    const [trail, setTrail] = useState("Loading!");
+    
+  const [trail, setTrail] = useState("Loading!");
 
-    const trails  = useSelector(state => state.data.appData.trails);
+  const trails  = useSelector(state => state.data.appData.trails);
 
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+
 
     console.log(trail_id)
 
@@ -122,6 +118,8 @@ const Trail = ({ route }) => {
     };
 
     const openGoogleMaps = () => {
+
+
       if (!data || data.length === 0) return;
     
       const coordinates = data
@@ -141,6 +139,112 @@ const Trail = ({ route }) => {
     };
 
     
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const requestLocationPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Location Permission',
+            message: 'App needs access to your location.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Location permission granted');
+          // Proceed to start location updates
+        } else {
+          console.log('Location permission denied');
+          // Handle permission denied case
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    } else {
+      // For iOS, handle permissions using CLLocationManager
+      // Ensure proper keys are added in Info.plist
+    }
+  };
+
+  requestLocationPermission();
+
+  useEffect(() => {
+    // Configure push notifications
+    PushNotification.configure({
+      onNotification: function (notification) {
+        console.log("NOTIFICATION:", notification);
+        // process the notification
+      },
+      requestPermissions: Platform.OS === 'ios',
+    });
+
+    // Create notification channel for Android
+    PushNotification.createChannel(
+      {
+        channelId: "location-alerts", // Channel ID
+        channelName: "Location Alerts", // Channel name
+        channelDescription: "A channel to categorise location alerts", // Channel description
+        soundName: "default",
+        importance: 4, // Importance of the notifications in this channel
+        vibrate: true, // Enable vibration
+      },
+      (created) => console.log(`CreateChannel returned '${created}'`) // (optional) callback returns whether the channel was created or not.
+    );
+  }, []);
+  
+  const transformedData = trail && trail.edges && trail.edges.length > 0 
+  ? [trail.edges[0].edge_start, ...trail.edges.map(edge => edge.edge_end)] 
+  : [];
+
+  const showNotification = () => {
+    PushNotification.localNotification({
+      title: "Hello",
+      message: "Your latitude is less than 50.",
+    });
+  };
+
+  // Configure Geolocation
+  Geolocation.setRNConfiguration({
+    authorizationLevel: 'always', // Request "always" location permission
+    skipPermissionRequests: false, // Prompt for permission if not granted
+  });
+
+// Watch for position updates
+const watchId = Geolocation.watchPosition(
+  position => {
+    console.log(position);
+
+    // TRATAR DE POR NOTIFICACAO AQUI
+  },
+  error => {
+    console.log(error);
+  },
+  {
+    distanceFilter: 10, // Minimum distance (in meters) to update the location
+    interval: 1500, // Update interval (in milliseconds), which is 15 minutes
+    fastestInterval: 1000, // Fastest update interval (in milliseconds)
+    accuracy: {
+      android: 'highAccuracy',
+      ios: 'best',
+    },
+    showsBackgroundLocationIndicator: true,
+    pausesLocationUpdatesAutomatically: false,
+    activityType: 'fitness', // Specify the activity type (e.g., 'fitness' or 'other')
+    useSignificantChanges: false,
+    deferredUpdatesInterval: 0,
+    deferredUpdatesDistance: 0,
+    foregroundService: {
+      notificationTitle: 'Tracking your location',
+      notificationBody: 'Enable location tracking to continue', // Add a notification body
+    },
+  }
+);
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     
   return (
     <ScrollView style={styles.container}>
