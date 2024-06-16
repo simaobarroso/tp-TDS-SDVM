@@ -1,7 +1,7 @@
-export const UPDATE_USERNAME = 'UPDATE_USERNAME';
-export const updateUsername = (username) => ({
-  type: UPDATE_USERNAME,
-  username 
+export const UPDATE_USER_DETAILS = 'UPDATE_USER_DETAILS';
+export const updateUserDetails = (user) => ({
+    type: UPDATE_USER_DETAILS,
+    payload: user,
 });
 
 export const SET_COOKIES = 'SET_COOKIES';

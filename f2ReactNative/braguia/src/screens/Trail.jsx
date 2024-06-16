@@ -101,6 +101,17 @@ const Trail = ({ route }) => {
 
     data = trail.edges;
 
+    const [isNavigating, setIsNavigating] = useState(false);
+
+    const handleNavigationPress = () => {
+      if (isNavigating) {
+        setIsNavigating(false);
+      } else {
+        openGoogleMaps();
+        setIsNavigating(true);
+      }
+    };
+
 
     const calcDifficulty = (dif) => {
       if (dif === 'E') {
@@ -128,6 +139,8 @@ const Trail = ({ route }) => {
     
       Linking.openURL(url);
     };
+
+    
     
   return (
     <ScrollView style={styles.container}>
@@ -160,8 +173,8 @@ const Trail = ({ route }) => {
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Edges', { trail_id: trail_id })}>
             <Text style={styles.buttonText}>See pins</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => openGoogleMaps()}>
-            <Text style={styles.buttonText}>Start Trail</Text>
+          <TouchableOpacity style={styles.button} onPress={() => handleNavigationPress()}>
+            <Text style={styles.buttonText}>{isNavigating ? 'Stop Trail' : 'Start Trail'}</Text>
           </TouchableOpacity>
         </View>
 

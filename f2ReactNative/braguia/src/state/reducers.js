@@ -1,17 +1,20 @@
 import { combineReducers } from 'redux';
-import { UPDATE_USERNAME , SET_COOKIES , ADD_TRIP, SET_DISTANCE,RESET_STATE, LOGIN_SUCCESS, LOGOUT} from '../actions/user';
-import {SET_APP_INFO, SET_APP_TRAILS, RESET_APP_DATA} from '../actions/appData';
+import { UPDATE_USER_DETAILS , SET_COOKIES , ADD_TRIP, SET_DISTANCE,RESET_STATE, LOGIN_SUCCESS, LOGOUT} from '../actions/user';
+import {SET_APP_INFO, SET_APP_TRAILS, RESET_APP_DATA, SET_APP_PINS} from '../actions/appData';
 
-const user  = (user = { username: ''}, action) => {
-    switch (action.type) {
-        case UPDATE_USERNAME:
-            return { username: action.username }
-        case RESET_STATE:
-            return { username: '' }; // Reset the username to its initial value
-        default:
-            return user;
-    }
-}
+const user = (user = { username: '', email: '', date_joined: '', user_type: '' }, action) => {
+  switch (action.type) {
+      case UPDATE_USER_DETAILS:
+          return {
+              ...user,
+              ...action.payload,
+          };
+      case RESET_STATE:
+          return { username: '', email: '', date_joined: '', user_type: '' }; // Reset the user details to initial values
+      default:
+          return user;
+  }
+};
 
 const cookies  = (cookies = { cookieVal: ''}, action) => {
     switch (action.type) {
@@ -55,7 +58,7 @@ const distance = (distance = { distanceVal: 1 }, action) => {
 };
 
   
-const appData = (state = { appinfo: null, trails: [] }, action) => {
+const appData = (state = { appinfo: null, trails: [], pins: [] }, action) => {
   switch (action.type) {
     case SET_APP_INFO:
       return {
@@ -67,6 +70,11 @@ const appData = (state = { appinfo: null, trails: [] }, action) => {
         ...state,
         trails: action.trails
       };
+      case SET_APP_PINS:
+        return {
+          ...state,
+          pins: action.pins
+        };
     case RESET_APP_DATA:
       return {
         appinfo: null,

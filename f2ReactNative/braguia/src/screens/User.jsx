@@ -4,12 +4,15 @@ import { useSelector,useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {resetState} from '../actions/user.js';
 import {cores} from '../var.js'
+import {setCookies, updateUsername, loginSuccess, logout} from '../actions/user.js';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 const User = () => {
     const dispatch = useDispatch();
 
+    const navigation = useNavigation();
 
     const userMetaData = useSelector((state) => state.data.user);
     const {
@@ -18,6 +21,14 @@ const User = () => {
       date_joined,
       user_type,
     } = userMetaData;
+
+
+    const handleLogout = () => {
+      dispatch(logout())
+    
+      // Perform any additional logout actions if needed, such as navigating to a login screen
+      navigation.navigate('Login');
+    };
     
     console.log(userMetaData);
   
@@ -57,7 +68,7 @@ const User = () => {
               <Text style={styles.buttonText}>Trails history</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => {dispatch(resetState());console.log("DEPOIS DAR REDIRECT DISTO")}}>
+            <TouchableOpacity style={styles.button} onPress={() => {handleLogout()}}>
               <Text style={styles.buttonText}>Logout!</Text>
             </TouchableOpacity>
 

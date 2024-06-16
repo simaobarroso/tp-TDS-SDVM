@@ -26,9 +26,10 @@ import { createStore, applyMiddleware } from 'redux';
 const Stack = createStackNavigator();
 console.log("a");
 console.log(store);
-/*
+
 const AppNavigator = () => {
-  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  const isLoggedIn = useSelector(state => state.data.authReducer.isLoggedIn);
+  console.log("IS LOGGEDIN " + isLoggedIn)
 
   return (
     <NavigationContainer>
@@ -39,41 +40,20 @@ const AppNavigator = () => {
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="Search" component={Search} />
             <Stack.Screen name="Trail" component={Trail} />
+            <Stack.Screen name="Edges" component={Edges} />
+            <Stack.Screen name="Pin" component={Pin} />
+            <Stack.Screen name="Login" component={Login} />
           </>
         ) : (
           <>
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Tab" component={TabNavigator} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="Search" component={Search} />
-          <Stack.Screen name="Trail" component={Trail} />
           </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-*/
-const AppNavigator = () => {
-  const isLoggedIn = useSelector(state => state.isLoggedIn);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-
-          <>
-          <Stack.Screen name="Tab" component={TabNavigator} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Search" component={Search} />
-          <Stack.Screen name="Trail" component={Trail} />
-          <Stack.Screen name="Edges" component={Edges} />
-          <Stack.Screen name="Pin" component={Pin} />
-          </>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
 
 const App = () => {
   return (

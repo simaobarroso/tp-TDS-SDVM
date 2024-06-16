@@ -1,5 +1,5 @@
 import { View, Text,TextInput, Image  } from 'react-native';
-import { StyleSheet, FlatList,  KeyboardAvoidingView,  TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, FlatList,  KeyboardAvoidingView,  TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUsername } from '../actions/user';
@@ -25,6 +25,8 @@ const Search = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredTrails, setFilteredTrails] = useState(trails);
+
+  const userType= useSelector((state) => state.data.user.user_type);
 
   const navigation = useNavigation();
 
@@ -77,7 +79,13 @@ const Search = () => {
     const renderTrail = ({ item }) => (
       <TouchableOpacity
           style={styles.trailItem}
-          onPress={() => navigation.navigate('Trail', { trail_id: item.id })}
+          onPress={() => { 
+            if (userType === 'Premium') {
+              navigation.navigate('Trail', { trail_id: item.id });
+            } else {
+              Alert.alert('Access Denied', 'Only premium users can access this feature');
+            }
+          }}
       >
           <Image source={{ uri: item.trail_img }} style={styles.trailImage} />
           <Text style={styles.trailName}>{item.trail_name}</Text>

@@ -1,5 +1,5 @@
 import { View, Text, Image  } from 'react-native';
-import { StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, Alert} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -29,6 +29,8 @@ const HomeScreen = () => {
 
     const navigation = useNavigation();
 
+    const userType= useSelector((state) => state.data.user.user_type);
+
   
     const updateInfo = async () => {
 
@@ -48,7 +50,13 @@ const HomeScreen = () => {
     const renderTrail = ({ item }) => (
       <TouchableOpacity
       style={styles.trailItem}
-      onPress={() => navigation.navigate('Trail', { trail_id: item.id })}
+      onPress={() => { 
+        if (userType === 'Premium') {
+          navigation.navigate('Trail', { trail_id: item.id });
+        } else {
+          Alert.alert('Access Denied', 'Only premium users can access this feature');
+        }
+      }}
       >
           <Image source={{ uri: item.trail_img }} style={styles.trailImage} />
           <Text style={styles.trailName}>{item.trail_name}</Text>
@@ -74,7 +82,7 @@ const HomeScreen = () => {
           
           <FlatList
           data={trails}
-          renderItem={renderTrail}
+          renderItem={({ item }) => renderTrail({ item, userType: userType })}
           keyExtractor={(item) => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}

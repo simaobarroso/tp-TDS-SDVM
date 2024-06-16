@@ -4,7 +4,7 @@ import {cores, api} from '../var.js';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux'; 
 //import { useNavigation } from '@react-navigation/native';
-import {setCookies, updateUsername, loginSuccess, logout} from '../actions/user.js';
+import {setCookies, updateUserDetails, loginSuccess, logout} from '../actions/user.js';
 import {setTrails, updateAppInfo, setPins} from '../actions/appData.js';
 import { useNavigation } from '@react-navigation/native';
 import HomeScreen from './HomeScreen.jsx'
@@ -92,7 +92,7 @@ const Login = () => {
       }
     })
     .then(user => {
-      dispatch(updateUsername(user));
+      dispatch(updateUserDetails(user));
     })
     .catch(error => {
       console.log('GetUser request failed by error:', error);
@@ -105,6 +105,7 @@ const Login = () => {
     getAppInfo();
     getTrails();
     getPins();
+    getUserFunc();
   }, []);
 
   const handleLogin = () => {
@@ -120,40 +121,49 @@ const Login = () => {
         password: password,
       }),
     })
-      .then(response => {
-        if (!response.ok) {
-          Alert.alert('Wrong Credentials');
-          throw new Error('Wrong Credentials');
-        }
-        return response;
-      })
-      .then(response => response.headers)
-      .then(headers => {
-        const cookies = headers.map['set-cookie'];
-        const csrfTokenMatch = cookies.match(/csrftoken=([^;]+)/);
-        const sessionIdMatch = cookies.match(/sessionid=([^;]+)/);
-        const csrfToken = csrfTokenMatch ? csrfTokenMatch[0] : null;
-        const sessionId = sessionIdMatch ? sessionIdMatch[0] : null;
+    .then(response => {
+      if (!response.ok) {
+        Alert.alert('Wrong Credentials');
+        throw new Error('Wrong Credentials');
+      }
+      return response;
+    })
+    .then(response => response.headers)
+    .then(headers => {
+      const cookies = headers.map['set-cookie'];
+      const csrfTokenMatch = cookies.match(/csrftoken=([^;]+)/);
+      const sessionIdMatch = cookies.match(/sessionid=([^;]+)/);
+      const csrfToken = csrfTokenMatch ? csrfTokenMatch[0] : null;
+      const sessionId = sessionIdMatch ? sessionIdMatch[0] : null;
 
-        dispatch(updateUsername(username.trim())); // Update the username in the store
+      if (csrfTokenMatch && sessionIdMatch) {
+        dispatch(setCookies(csrfToken + ';' + sessionId));
+      }
 
-        if (csrfTokenMatch && sessionIdMatch) {
-          // Save cookies in Redux store
-          dispatch(setCookies(csrfToken + ';' + sessionId));
-        }
+      dispatch(loginSuccess(username.trim(), csrfToken + ';' + sessionId));
 
-        dispatch(loginSuccess(username.trim(), csrfToken + ';' + sessionId));
-
-        
-
-        // Navigate to HomeScreen upon successful login
-        navigation.navigate('HomeScreen');
-      })
-      .catch(error => {
-        Alert.alert('Login Failed', `Error: ${error.message}`);
+      return fetch(api + 'user', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': csrfToken + ';' + sessionId,
+        },
       });
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch user details after login');
+      }
+      return response.json();
+    })
+    .then(user => {
+      dispatch(updateUserDetails(user));
+      navigation.navigate('Tab');
+    })
+    .catch(error => {
+      Alert.alert('Login Failed', `Error: ${error.message}`);
+    });
   };
-
 
 
 

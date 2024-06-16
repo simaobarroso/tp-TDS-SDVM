@@ -27,36 +27,53 @@ const TabNavigator = () => {
                 tabBarStyle: styles.tabBarStyle,
                 // tabBarBackground: () => (<BlurView overlayColor = '' bluramount={15} style={styles.BluerViewStyles}/>),
             }}>
-                <Tab.Screen name="Login" component={Login} options={{
-                    tabBarIcon: ({focused, color, size}) => (
-                    <Icon size={25} color="white" name="home" />
-                    )
-                }}/>
-                <Tab.Screen name="Home" component={Home} options={{
-                    tabBarIcon: ({focused, color, size}) => (
-                    <Icon size={25} color="white" name="home" />
-                    )
-                }}/>
 
-                <Tab.Screen name="Search" component={Search} options={{
-                    tabBarIcon: ({focused, color, size}) => (
-                        <Icon size={25} color="white" name="search" />
-                        )
-                }}/>
-                <Tab.Screen name="Emergency" component={Emergency} options={{
-                    tabBarIcon: ({focused, color, size}) => (
-                        <Icon size={25} color="white" name="call" />
-                        )
-                }}/>
-                <Tab.Screen name="User" component={User} options={{
-                    tabBarIcon: ({focused, color, size}) => (
-                        <Icon size={25} color="white" name="history" />
-                        )
-                }}/>
-                </Tab.Navigator>
-  )
-}
+<Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon size={focused ? 30 : 25} color={focused ? "white" : "#E0E0E0"} name="home" />
+          ),
+          tabBarLabel: () => null,
+        }}
+      />
 
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon size={focused ? 30 : 25} color={focused ? "white" : "#E0E0E0"} name="search" />
+          ),
+          tabBarLabel: () => null,
+        }}
+      />
+
+      <Tab.Screen
+        name="Emergency"
+        component={Emergency}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon size={focused ? 30 : 25} color={focused ? "white" : "#E0E0E0"} name="call" />
+          ),
+          tabBarLabel: () => null,
+        }}
+      />
+
+      <Tab.Screen
+        name="User"
+        component={User}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon size={focused ? 30 : 25} color={focused ? "white" : "#E0E0E0"} name="person" />
+          ),
+          tabBarLabel: () => null,
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const styles = StyleSheet.create({
     tabBarStyle: {
