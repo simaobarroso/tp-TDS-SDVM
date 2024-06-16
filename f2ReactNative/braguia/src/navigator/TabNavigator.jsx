@@ -71,6 +71,17 @@ const TabNavigator = () => {
           tabBarLabel: () => null,
         }}
       />
+
+    <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon size={focused ? 30 : 25} color={focused ? "white" : "#E0E0E0"} name="settings" />
+          ),
+          tabBarLabel: () => null,
+        }}
+      />
     </Tab.Navigator>
   );
 };

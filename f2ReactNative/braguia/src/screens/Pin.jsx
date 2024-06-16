@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity  } from 'react-native';
-import { StyleSheet, FlatList , ScrollView, Linking} from 'react-native';
+import { StyleSheet, FlatList , ScrollView, Linking, Alert} from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUsername } from '../actions/user';
@@ -8,10 +8,37 @@ import { useNavigation } from '@react-navigation/native';
 import {cores, api, api2} from '../var.js'
 import MapView, { MapUrlTile, Marker, Polyline } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import RNFS from 'react-native-fs';
+import Permissions from 'react-native-permissions';
 import Video from 'react-native-video';
 import Sound from 'react-native-sound';
 
+const MapComponent = ({ data , style}) => {
+  // Check if data is provided and is an object with pin information
+  if (!data || !data.pin_lat || !data.pin_lng ) {
+    return <Text>No valid pin data available</Text>;
+  }
 
+  const { pin_lat, pin_lng } = data;
+
+  console.log(data)
+
+  return (
+    <MapView
+      style = {style}
+      initialRegion={{
+        latitude: pin_lat,
+        longitude: pin_lng,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      }}
+    >
+      <Marker
+        coordinate={{ latitude: pin_lat, longitude: pin_lng }}
+      />
+    </MapView>
+  );
+};
 
 const Pin = ({ route }) => {
   const { pin_id, trail_id } = route.params;
@@ -94,19 +121,93 @@ const Pin = ({ route }) => {
       }
     };
 
+
+    const downloadFile = async (uri, fileType) => {
+      if (!uri) return;
+  
+      const permission = await Permissions.request(Permissions.PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
+  
+      if (permission === Permissions.RESULTS.GRANTED) {
+        const fileName = uri.split('/').pop();
+        const filePath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
+  
+        RNFS.downloadFile({
+          fromUrl: uri,
+          toFile: filePath,
+        }).promise.then(res => {
+          if (res.statusCode === 200) {
+            Alert.alert('Download Success', `${fileType} downloaded successfully!`);
+          } else {
+            Alert.alert('Download Failed', `Failed to download ${fileType}`);
+          }
+        }).catch(err => {
+          console.log(err);
+          Alert.alert('Download Error', `An error occurred while downloading the ${fileType}`);
+        });
+      } else if (permission === Permissions.RESULTS.DENIED) {
+        Alert.alert(
+          'Permission Denied',
+          'You need to give storage permission to download the file',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+          ],
+        );
+      } else if (permission === Permissions.RESULTS.BLOCKED) {
+        Alert.alert(
+          'Permission Blocked',
+          'Storage permission is blocked. Please open settings to enable it.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+          ],
+        );
+      }
+    };
+  
+    const downloadMedia = () => {
+      if (imageUri) downloadFile(imageUri, 'Image');
+      if (audioUri) downloadFile(audioUri, 'Audio');
+      if (videoUri) downloadFile(videoUri, 'Video');
+    };
+
+
+    console.log('Using style:', imageUri ? styles.map : styles.abc);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.container}>
         <View style={styles.containerCenter}>
           <Text style={styles.title}>{pin.pin_name}</Text>
 
-          {imageUri && (
-          <Image
-            source={{ uri: imageUri }}
-            style={styles.image}
-            onError={() => console.log("Error loading image")}
-          />
-        )}
+
+            {imageUri ? (
+            <View style={styles.containerImageMap}>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: imageUri }}
+                  style={styles.image}
+                  onError={() => console.log("Error loading image")}
+                />
+            </View>
+            <MapComponent
+              data={{
+                pin_lat: pin.pin_lat,
+                pin_lng: pin.pin_lng,
+              }}
+              style={styles.map}
+              />
+            </View>
+          ):
+          <MapComponent
+              data={{
+                pin_lat: pin.pin_lat,
+                pin_lng: pin.pin_lng,
+              }}
+              style={styles.abc}
+              />
+          }
+
 
           <Text style={styles.desc}>{pin.pin_desc}</Text>
 
@@ -120,11 +221,16 @@ const Pin = ({ route }) => {
           />
         )}
 
-        {audioUri && (
-          <TouchableOpacity style={styles.button} onPress={() => playAudio()}>
-            <Text style={styles.buttonText}>Play Audio</Text>
-          </TouchableOpacity>
-        )}
+        <View style={ styles.containerButtons}>
+          {audioUri && (
+            <TouchableOpacity style={styles.button} onPress={() => playAudio()}>
+              <Text style={styles.buttonText}>Play Audio</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity style={styles.button} onPress={() => downloadMedia()} >
+              <Text style={styles.buttonText}>Download Media</Text>
+            </TouchableOpacity>
+        </View>
 
         </View>
       </View>
@@ -175,10 +281,11 @@ const styles = StyleSheet.create({
     marginRight: 15, // Spacing between image and map
   },
   image: {
-    height: 200,
+    width: '100%',
+    height: undefined,
     aspectRatio: 1,
     resizeMode: 'contain',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   title: {
     fontSize: 24,
@@ -193,10 +300,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color : 'black'
   },
-    map: {
-      width: '40%',
-      height: '100%', // Adjust the height here to make the map smaller
-    },
     trailItem: {
       marginRight: 16,
       alignItems: 'center',
@@ -234,6 +337,15 @@ const styles = StyleSheet.create({
       height: 200,
       backgroundColor: '#000',
       marginVertical: 10,
+    },
+    map: {
+      width: '40%',
+      height: '100%'
+    },
+    abc: {
+      marginBottom: 25,
+      width: '80%',
+      height: 200
     },
 });
 

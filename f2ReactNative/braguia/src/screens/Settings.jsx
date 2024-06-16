@@ -5,46 +5,48 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Settings = () => {
   const [isSwitch1Enabled, setIsSwitch1Enabled] = useState(true);
-  const [isSwitch2Enabled, setIsSwitch2Enabled] = useState(false);
+
 
   const toggleSwitch1 = () => setIsSwitch1Enabled(previousState => !previousState);
-  const toggleSwitch2 = () => setIsSwitch2Enabled(previousState => !previousState);
+
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.switchContainer}>
-        <Text>Background Services</Text>
+      <Text style={styles.title}>Settings</Text>
+      <View style={styles.containerSetting}>
+        <Text style={styles.text}>Location Services</Text>
         <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isSwitch1Enabled ? "#f5dd4b" : "#f4f3f4"}
+          trackColor={{ false: "#767577", true: "#854e4e" }}
+          thumbColor={cores.uminho}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch1}
           value={isSwitch1Enabled}
         />
-      </View>
-      <View style={styles.switchContainer}>
-        <Text>Dark Theme</Text>
-        <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isSwitch2Enabled ? "#f5dd4b" : "#f4f3f4"}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch2}
-          value={isSwitch2Enabled}
-        />
-      </View>
+        </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    margin: 15
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 15,
+    marginBottom: 250,
+    color : cores.uminho
+  },
+  containerSetting: {
+    flexDirection: "row"
   },
   text: {
     fontSize: 18,
     marginBottom: 20,
+    color: "black"
   },
   button: {
     backgroundColor: '#007BFF',
